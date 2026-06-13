@@ -78,10 +78,7 @@
         input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         input[type=number] { -moz-appearance: textfield; }
         
-        /* ИСПРАВЛЕНИЕ: плавный ввод без моргания */
-        .reps-input {
-            transition: all 0.2s ease;
-        }
+        .reps-input { transition: all 0.2s ease; }
         .reps-input:focus {
             outline: none;
             border-color: rgba(99, 102, 241, 0.6) !important;
@@ -146,31 +143,32 @@
 
     <!-- Header -->
     <header class="glass-header sticky top-0 z-40 px-5 pt-12 pb-6">
-        <div class="flex items-center justify-between mb-4">
-            <div class="flex items-center gap-3">
-                <div class="liquid-glass w-12 h-12 rounded-xl flex items-center justify-center">
-                    <svg class="w-7 h-7 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                </div>
-                <div>
-                    <h1 class="text-2xl font-bold gradient-text">Gympro</h1>
-                    <p class="text-xs text-gray-400">Тренировки и питание</p>
-                </div>
+        <!-- Logo (без кнопок рядом, чтобы не конфликтовать с Telegram UI) -->
+        <div class="flex items-center gap-3 mb-4">
+            <div class="liquid-glass w-12 h-12 rounded-xl flex items-center justify-center">
+                <svg class="w-7 h-7 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
             </div>
-            
-            <div class="flex items-center gap-2">
-                <button onclick="resetProgress()" class="liquid-glass-button flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all active:scale-95">
-                    <svg class="w-5 h-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                    <span class="text-sm font-medium text-gray-300">Сбросить</span>
-                </button>
-                
-                <button onclick="openCalendar()" class="liquid-glass-button flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all active:scale-95">
-                    <svg class="w-5 h-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                    <span class="text-sm font-medium text-gray-300">Календарь</span>
-                </button>
+            <div>
+                <h1 class="text-2xl font-bold gradient-text">Gympro</h1>
+                <p class="text-xs text-gray-400">Тренировки и питание</p>
             </div>
         </div>
 
-        <div class="liquid-glass-card rounded-2xl p-4 mt-2">
+        <!-- Кнопки Сбросить и Календарь - отдельной строкой под логотипом -->
+        <div class="grid grid-cols-2 gap-3 mb-4">
+            <button onclick="resetProgress()" class="liquid-glass-button flex items-center justify-center gap-2 px-4 py-3 rounded-xl transition-all active:scale-95">
+                <svg class="w-5 h-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                <span class="text-sm font-medium text-gray-300">Сбросить</span>
+            </button>
+            
+            <button onclick="openCalendar()" class="liquid-glass-button flex items-center justify-center gap-2 px-4 py-3 rounded-xl transition-all active:scale-95">
+                <svg class="w-5 h-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                <span class="text-sm font-medium text-gray-300">Календарь</span>
+            </button>
+        </div>
+
+        <!-- Progress Card -->
+        <div class="liquid-glass-card rounded-2xl p-4">
             <div class="flex items-center justify-between mb-3">
                 <span class="text-sm font-medium text-gray-300">Прогресс тренировки</span>
                 <span id="progressText" class="text-sm font-bold text-indigo-400">0 / 0</span>
@@ -195,7 +193,7 @@
     <div class="px-5 mt-6">
         <div class="liquid-glass p-1.5 rounded-2xl flex gap-2">
             <button onclick="switchMainTab('workouts')" id="tab-workouts" class="flex-1 py-3 rounded-xl text-sm font-bold transition-all liquid-glass-active text-white">💪 Упражнения</button>
-            <button onclick="switchMainTab('nutrition')" id="tab-nutrition" class="flex-1 py-3 rounded-xl text-sm font-bold transition-all liquid-glass-button text-gray-400">🥗 Питание</button>
+            <button onclick="switchMainTab('nutrition')" id="tab-nutrition" class="flex-1 py-3 rounded-xl text-sm font-bold transition-all liquid-glass-button text-gray-400"> Питание</button>
         </div>
     </div>
 
@@ -271,7 +269,7 @@
                 <span class="liquid-glass px-3 py-1.5 rounded-full text-xs font-medium text-gray-300">🥚 Яйца</span>
                 <span class="liquid-glass px-3 py-1.5 rounded-full text-xs font-medium text-gray-300">🍗 Курица</span>
                 <span class="liquid-glass px-3 py-1.5 rounded-full text-xs font-medium text-gray-300">🥛 Творог</span>
-                <span class="liquid-glass px-3 py-1.5 rounded-full text-xs font-medium text-gray-300"> Овсянка</span>
+                <span class="liquid-glass px-3 py-1.5 rounded-full text-xs font-medium text-gray-300">🥣 Овсянка</span>
                 <span class="liquid-glass px-3 py-1.5 rounded-full text-xs font-medium text-gray-300">🍚 Рис</span>
                 <span class="liquid-glass px-3 py-1.5 rounded-full text-xs font-medium text-gray-300">🥦 Овощи</span>
                 <span class="liquid-glass px-3 py-1.5 rounded-full text-xs font-medium text-gray-300">🍌 Бананы</span>
@@ -412,10 +410,10 @@
 
         const categories = [
             { id: 'abs', name: 'Живот и бока', icon: '🔥' },
-            { id: 'arms', name: 'Руки', icon: '' },
-            { id: 'shoulders', name: 'Плечи', icon: '' },
-            { id: 'chest', name: 'Грудь', icon: '🛡️' },
-            { id: 'legs', name: 'Ноги', icon: '🦵' }
+            { id: 'arms', name: 'Руки', icon: '💪' },
+            { id: 'shoulders', name: 'Плечи', icon: '🎯' },
+            { id: 'chest', name: 'Грудь', icon: '️' },
+            { id: 'legs', name: 'Ноги', icon: '' }
         ];
 
         const exercises = [
@@ -521,11 +519,9 @@
         function saveProgress() { try { localStorage.setItem('workoutProgress', JSON.stringify(progress)); } catch (e) {} }
         function getProgress(exId) { if (!progress[exId]) progress[exId] = { completedSets: 0, reps: 0, done: false }; return progress[exId]; }
 
-        // ИСПРАВЛЕНИЕ: обновляем только счётчики без перерисовки
         function updateProgressSilent(exId, updates) {
             Object.assign(getProgress(exId), updates);
             saveProgress();
-            // Обновляем только текст счётчиков — без перерисовки всего списка
             updateHeaderProgress();
             const dateKey = new Date().getFullYear() + '-' + String(new Date().getMonth() + 1).padStart(2, '0') + '-' + String(new Date().getDate()).padStart(2, '0');
             if (!workoutCalendar[dateKey]) { workoutCalendar[dateKey] = true; try { localStorage.setItem('workoutCalendar', JSON.stringify(workoutCalendar)); } catch (e) {} }
@@ -683,8 +679,6 @@
 
                 html += '<div class="grid grid-cols-2 gap-2 mb-3">';
                 html += '<div class="liquid-glass rounded-lg p-3 border border-white/10"><div class="text-[10px] font-bold text-gray-500 uppercase mb-2">Подходы</div><div class="flex items-center justify-between"><button onclick="changeSets(' + ex.id + ', -1)" class="tracker-btn w-8 h-8 rounded-lg liquid-glass-button text-gray-400 font-bold flex items-center justify-center hover:text-white text-lg">−</button><span class="text-xl font-bold text-white w-8 text-center">' + p.completedSets + '</span><button onclick="changeSets(' + ex.id + ', 1)" class="tracker-btn w-8 h-8 rounded-lg bg-indigo-600/40 text-indigo-300 font-bold flex items-center justify-center hover:bg-indigo-600/60 text-lg">+</button></div></div>';
-                
-                // ИСПРАВЛЕНИЕ: onchange вместо oninput — перерисовка только после потери фокуса
                 html += '<div class="liquid-glass rounded-lg p-3 border border-white/10"><div class="text-[10px] font-bold text-gray-500 uppercase mb-2">Повторения</div><div class="flex items-center justify-between"><button onclick="changeReps(' + ex.id + ', -1)" class="tracker-btn w-8 h-8 rounded-lg liquid-glass-button text-gray-400 font-bold flex items-center justify-center hover:text-white text-lg">−</button><input type="number" id="reps-input-' + ex.id + '" value="' + p.reps + '" onchange="onRepsChange(' + ex.id + ', this.value)" onblur="onRepsBlur(' + ex.id + ', this.value)" class="reps-input w-12 text-center text-xl font-bold text-white liquid-glass border border-white/10 rounded-lg py-1" min="0" inputmode="numeric"><button onclick="changeReps(' + ex.id + ', 1)" class="tracker-btn w-8 h-8 rounded-lg bg-indigo-600/40 text-indigo-300 font-bold flex items-center justify-center hover:bg-indigo-600/60 text-lg">+</button></div></div>';
                 html += '</div>';
 
@@ -696,14 +690,12 @@
             list.innerHTML = html;
         }
 
-        // ИСПРАВЛЕНИЕ: обработчики ввода без моргания
         function onRepsChange(exId, value) {
             const newReps = Math.max(0, parseInt(value) || 0);
             updateProgress(exId, { reps: newReps });
         }
 
         function onRepsBlur(exId, value) {
-            // При потере фокуса синхронизируем значение
             const input = document.getElementById('reps-input-' + exId);
             if (input) {
                 const p = getProgress(exId);
@@ -725,7 +717,7 @@
                 html += '<article class="liquid-glass-card rounded-2xl overflow-hidden card-enter" style="animation-delay: ' + (i * 0.08) + 's">';
                 html += '<div class="bg-gradient-to-r from-amber-600/40 to-orange-600/40 p-4 relative border-b border-white/10">';
                 if (match > 0) html += '<div class="absolute top-3 right-3 liquid-glass rounded-full px-2.5 py-1 text-xs font-bold text-amber-400 match-badge border border-amber-500/30">' + match + '%</div>';
-                html += '<div class="flex items-start justify-between mb-2"><h3 class="text-lg font-bold text-white leading-tight flex-1 pr-2">' + recipe.title + '</h3><div class="liquid-glass rounded-lg px-2 py-1 text-xs font-bold text-gray-300 border border-white/10">️ ' + recipe.time + '</div></div>';
+                html += '<div class="flex items-start justify-between mb-2"><h3 class="text-lg font-bold text-white leading-tight flex-1 pr-2">' + recipe.title + '</h3><div class="liquid-glass rounded-lg px-2 py-1 text-xs font-bold text-gray-300 border border-white/10">⏱️ ' + recipe.time + '</div></div>';
                 html += '<div class="grid grid-cols-4 gap-2 mt-3"><div class="liquid-glass rounded-lg p-2 text-center border border-white/10"><div class="text-[10px] text-gray-400 uppercase">Ккал</div><div class="text-sm font-bold text-white">' + recipe.calories + '</div></div><div class="liquid-glass rounded-lg p-2 text-center border border-white/10"><div class="text-[10px] text-gray-400 uppercase">Белки</div><div class="text-sm font-bold text-indigo-400">' + recipe.protein + 'г</div></div><div class="liquid-glass rounded-lg p-2 text-center border border-white/10"><div class="text-[10px] text-gray-400 uppercase">Углеводы</div><div class="text-sm font-bold text-emerald-400">' + recipe.carbs + 'г</div></div><div class="liquid-glass rounded-lg p-2 text-center border border-white/10"><div class="text-[10px] text-gray-400 uppercase">Жиры</div><div class="text-sm font-bold text-orange-400">' + recipe.fat + 'г</div></div></div>';
                 html += '</div><div class="p-5"><div class="mb-4"><h4 class="text-sm font-bold text-gray-300 mb-2 flex items-center gap-2">📝 Ингредиенты</h4><ul class="space-y-1.5">';
                 for (let j = 0; j < recipe.ingredients.length; j++) {
