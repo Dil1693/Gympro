@@ -142,8 +142,8 @@
 <body class="pb-10">
 
     <!-- Header -->
-    <header class="glass-header sticky top-0 z-40 px-5 pt-12 pb-6">
-        <!-- Logo (без кнопок рядом, чтобы не конфликтовать с Telegram UI) -->
+    <header class="glass-header sticky top-0 z-40 px-5 pt-20 pb-6">
+        <!-- Logo (опущен ниже, чтобы не перекрывался кнопкой "Закрыть" от Telegram) -->
         <div class="flex items-center gap-3 mb-4">
             <div class="liquid-glass w-12 h-12 rounded-xl flex items-center justify-center">
                 <svg class="w-7 h-7 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
@@ -154,7 +154,7 @@
             </div>
         </div>
 
-        <!-- Кнопки Сбросить и Календарь - отдельной строкой под логотипом -->
+        <!-- Кнопки Сбросить и Календарь -->
         <div class="grid grid-cols-2 gap-3 mb-4">
             <button onclick="resetProgress()" class="liquid-glass-button flex items-center justify-center gap-2 px-4 py-3 rounded-xl transition-all active:scale-95">
                 <svg class="w-5 h-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
@@ -193,7 +193,7 @@
     <div class="px-5 mt-6">
         <div class="liquid-glass p-1.5 rounded-2xl flex gap-2">
             <button onclick="switchMainTab('workouts')" id="tab-workouts" class="flex-1 py-3 rounded-xl text-sm font-bold transition-all liquid-glass-active text-white">💪 Упражнения</button>
-            <button onclick="switchMainTab('nutrition')" id="tab-nutrition" class="flex-1 py-3 rounded-xl text-sm font-bold transition-all liquid-glass-button text-gray-400"> Питание</button>
+            <button onclick="switchMainTab('nutrition')" id="tab-nutrition" class="flex-1 py-3 rounded-xl text-sm font-bold transition-all liquid-glass-button text-gray-400">🥗 Питание</button>
         </div>
     </div>
 
@@ -220,7 +220,7 @@
     <div id="nutrition-section" class="hidden">
         <div class="px-5 mt-6">
             <div class="liquid-glass p-1.5 rounded-2xl flex gap-2">
-                <button onclick="switchNutritionTab('weight-loss')" id="nutab-weight-loss" class="flex-1 py-3 rounded-xl text-sm font-bold transition-all liquid-glass-active text-white">🔥 Похудение</button>
+                <button onclick="switchNutritionTab('weight-loss')" id="nutab-weight-loss" class="flex-1 py-3 rounded-xl text-sm font-bold transition-all liquid-glass-active text-white"> Похудение</button>
                 <button onclick="switchNutritionTab('muscle-gain')" id="nutab-muscle-gain" class="flex-1 py-3 rounded-xl text-sm font-bold transition-all liquid-glass-button text-gray-400">💪 Набор массы</button>
             </div>
         </div>
@@ -229,7 +229,7 @@
             <div class="liquid-glass-card rounded-2xl p-5">
                 <div class="flex items-start gap-3">
                     <div class="liquid-glass w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0">
-                        <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     </div>
                     <div class="flex-1">
                         <h3 class="font-bold text-white mb-1" id="nutritionTitle">Похудение</h3>
@@ -257,7 +257,7 @@
                 <div id="selectedIngredients" class="flex flex-wrap gap-2 mb-3"></div>
 
                 <div class="flex gap-2">
-                    <button onclick="findRecipes()" class="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-xl text-sm font-bold hover:shadow-lg hover:shadow-indigo-500/25 transition-all active:scale-95">🔍 Найти рецепты</button>
+                    <button onclick="findRecipes()" class="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-xl text-sm font-bold hover:shadow-lg hover:shadow-indigo-500/25 transition-all active:scale-95"> Найти рецепты</button>
                     <button onclick="clearIngredients()" class="liquid-glass-button px-4 py-3 text-gray-300 rounded-xl text-sm font-semibold hover:bg-white/10 transition-colors">Очистить</button>
                 </div>
             </div>
@@ -267,7 +267,7 @@
             <h2 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Бюджетные продукты (Metro)</h2>
             <div class="flex flex-wrap gap-2">
                 <span class="liquid-glass px-3 py-1.5 rounded-full text-xs font-medium text-gray-300">🥚 Яйца</span>
-                <span class="liquid-glass px-3 py-1.5 rounded-full text-xs font-medium text-gray-300">🍗 Курица</span>
+                <span class="liquid-glass px-3 py-1.5 rounded-full text-xs font-medium text-gray-300"> Курица</span>
                 <span class="liquid-glass px-3 py-1.5 rounded-full text-xs font-medium text-gray-300">🥛 Творог</span>
                 <span class="liquid-glass px-3 py-1.5 rounded-full text-xs font-medium text-gray-300">🥣 Овсянка</span>
                 <span class="liquid-glass px-3 py-1.5 rounded-full text-xs font-medium text-gray-300">🍚 Рис</span>
@@ -313,7 +313,7 @@
                 <div class="mt-4 pt-4 border-t border-white/10">
                     <div class="flex items-center justify-between text-sm">
                         <span class="text-gray-400">Тренировок в этом месяце:</span>
-                        <span id="workoutCount" class="font-bold text-indigo-400">0</span>
+                        <span id="workoutCount" class="font-bold text-emerald-400">0</span>
                     </div>
                 </div>
             </div>
@@ -412,8 +412,8 @@
             { id: 'abs', name: 'Живот и бока', icon: '🔥' },
             { id: 'arms', name: 'Руки', icon: '💪' },
             { id: 'shoulders', name: 'Плечи', icon: '🎯' },
-            { id: 'chest', name: 'Грудь', icon: '️' },
-            { id: 'legs', name: 'Ноги', icon: '' }
+            { id: 'chest', name: 'Грудь', icon: '🛡️' },
+            { id: 'legs', name: 'Ноги', icon: '🦵' }
         ];
 
         const exercises = [
@@ -709,26 +709,42 @@
             if (selectedIngredients.length > 0) {
                 currentRecipes = currentRecipes.map(r => ({ recipe: r, match: calculateMatch(r) })).filter(i => i.match > 0).sort((a, b) => b.match - a.match).map(i => i.recipe);
             }
+            // Зелёный градиент вместо оранжевого
             let html = '<div class="flex items-center justify-between mb-2"><h2 class="text-xl font-bold text-white">🥗 Рецепты</h2><span class="text-xs font-medium text-gray-500">' + currentRecipes.length + '</span></div>';
-            if (selectedIngredients.length > 0 && currentRecipes.length === 0) html += '<div class="liquid-glass-card rounded-2xl p-6 text-center border border-amber-500/20"><div class="text-4xl mb-2">🔍</div><h3 class="font-bold text-amber-400 mb-1">Не найдено</h3><p class="text-sm text-gray-400">Попробуйте другие продукты</p></div>';
+            if (selectedIngredients.length > 0 && currentRecipes.length === 0) html += '<div class="liquid-glass-card rounded-2xl p-6 text-center border border-emerald-500/20"><div class="text-4xl mb-2"></div><h3 class="font-bold text-emerald-400 mb-1">Не найдено</h3><p class="text-sm text-gray-400">Попробуйте другие продукты</p></div>';
             for (let i = 0; i < currentRecipes.length; i++) {
                 const recipe = currentRecipes[i];
                 const match = selectedIngredients.length > 0 ? calculateMatch(recipe) : 0;
                 html += '<article class="liquid-glass-card rounded-2xl overflow-hidden card-enter" style="animation-delay: ' + (i * 0.08) + 's">';
-                html += '<div class="bg-gradient-to-r from-amber-600/40 to-orange-600/40 p-4 relative border-b border-white/10">';
-                if (match > 0) html += '<div class="absolute top-3 right-3 liquid-glass rounded-full px-2.5 py-1 text-xs font-bold text-amber-400 match-badge border border-amber-500/30">' + match + '%</div>';
+                // Зелёный градиент вместо оранжевого
+                html += '<div class="bg-gradient-to-r from-emerald-600/40 to-green-600/40 p-4 relative border-b border-white/10">';
+                if (match > 0) html += '<div class="absolute top-3 right-3 liquid-glass rounded-full px-2.5 py-1 text-xs font-bold text-emerald-400 match-badge border border-emerald-500/30">' + match + '%</div>';
                 html += '<div class="flex items-start justify-between mb-2"><h3 class="text-lg font-bold text-white leading-tight flex-1 pr-2">' + recipe.title + '</h3><div class="liquid-glass rounded-lg px-2 py-1 text-xs font-bold text-gray-300 border border-white/10">⏱️ ' + recipe.time + '</div></div>';
-                html += '<div class="grid grid-cols-4 gap-2 mt-3"><div class="liquid-glass rounded-lg p-2 text-center border border-white/10"><div class="text-[10px] text-gray-400 uppercase">Ккал</div><div class="text-sm font-bold text-white">' + recipe.calories + '</div></div><div class="liquid-glass rounded-lg p-2 text-center border border-white/10"><div class="text-[10px] text-gray-400 uppercase">Белки</div><div class="text-sm font-bold text-indigo-400">' + recipe.protein + 'г</div></div><div class="liquid-glass rounded-lg p-2 text-center border border-white/10"><div class="text-[10px] text-gray-400 uppercase">Углеводы</div><div class="text-sm font-bold text-emerald-400">' + recipe.carbs + 'г</div></div><div class="liquid-glass rounded-lg p-2 text-center border border-white/10"><div class="text-[10px] text-gray-400 uppercase">Жиры</div><div class="text-sm font-bold text-orange-400">' + recipe.fat + 'г</div></div></div>';
-                html += '</div><div class="p-5"><div class="mb-4"><h4 class="text-sm font-bold text-gray-300 mb-2 flex items-center gap-2">📝 Ингредиенты</h4><ul class="space-y-1.5">';
+                html += '<div class="grid grid-cols-4 gap-2 mt-3">';
+                html += '<div class="liquid-glass rounded-lg p-2 text-center border border-white/10"><div class="text-[10px] text-gray-400 uppercase">Ккал</div><div class="text-sm font-bold text-white">' + recipe.calories + '</div></div>';
+                html += '<div class="liquid-glass rounded-lg p-2 text-center border border-white/10"><div class="text-[10px] text-gray-400 uppercase">Белки</div><div class="text-sm font-bold text-emerald-400">' + recipe.protein + 'г</div></div>';
+                html += '<div class="liquid-glass rounded-lg p-2 text-center border border-white/10"><div class="text-[10px] text-gray-400 uppercase">Углеводы</div><div class="text-sm font-bold text-emerald-300">' + recipe.carbs + 'г</div></div>';
+                html += '<div class="liquid-glass rounded-lg p-2 text-center border border-white/10"><div class="text-[10px] text-gray-400 uppercase">Жиры</div><div class="text-sm font-bold text-emerald-400">' + recipe.fat + 'г</div></div>';
+                html += '</div></div>';
+                
+                html += '<div class="p-5">';
+                html += '<div class="mb-4"><h4 class="text-sm font-bold text-gray-300 mb-2 flex items-center gap-2">📝 Ингредиенты</h4><ul class="space-y-1.5">';
                 for (let j = 0; j < recipe.ingredients.length; j++) {
                     const ing = recipe.ingredients[j];
                     const isAvailable = selectedIngredients.some(sel => ing.toLowerCase().indexOf(sel.toLowerCase()) !== -1 || sel.toLowerCase().indexOf(ing.toLowerCase()) !== -1);
-                    html += '<li class="text-sm text-gray-400 flex items-start gap-2"><span class="w-1.5 h-1.5 rounded-full ' + (isAvailable && selectedIngredients.length > 0 ? 'bg-emerald-400' : 'bg-orange-400') + ' mt-2 flex-shrink-0"></span>' + ing + (isAvailable && selectedIngredients.length > 0 ? ' <span class="text-emerald-400">✓</span>' : '') + '</li>';
+                    // Зелёные точки вместо оранжевых
+                    html += '<li class="text-sm text-gray-400 flex items-start gap-2"><span class="w-1.5 h-1.5 rounded-full ' + (isAvailable && selectedIngredients.length > 0 ? 'bg-emerald-400' : 'bg-emerald-500/50') + ' mt-2 flex-shrink-0"></span>' + ing + (isAvailable && selectedIngredients.length > 0 ? ' <span class="text-emerald-400">✓</span>' : '') + '</li>';
                 }
-                html += '</ul></div><div class="mb-4"><h4 class="text-sm font-bold text-gray-300 mb-2 flex items-center gap-2">‍🍳 Приготовление</h4><ol class="space-y-2">';
-                for (let j = 0; j < recipe.steps.length; j++) html += '<li class="text-sm text-gray-400 flex items-start gap-2"><span class="w-5 h-5 rounded-full liquid-glass text-indigo-400 text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5 border border-indigo-500/30">' + (j + 1) + '</span>' + recipe.steps[j] + '</li>';
+                html += '</ul></div>';
+                
+                html += '<div class="mb-4"><h4 class="text-sm font-bold text-gray-300 mb-2 flex items-center gap-2">👨‍🍳 Приготовление</h4><ol class="space-y-2">';
+                for (let j = 0; j < recipe.steps.length; j++) html += '<li class="text-sm text-gray-400 flex items-start gap-2"><span class="w-5 h-5 rounded-full liquid-glass text-emerald-400 text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5 border border-emerald-500/30">' + (j + 1) + '</span>' + recipe.steps[j] + '</li>';
                 html += '</ol></div>';
-                if (recipe.tips) html += '<div class="liquid-glass border border-amber-500/20 rounded-lg p-3"><div class="text-xs font-bold text-amber-400 mb-1 flex items-center gap-1">💡 Совет</div><p class="text-xs text-gray-400 leading-relaxed">' + recipe.tips + '</p></div>';
+                
+                if (recipe.tips) {
+                    // Зелёный блок совета вместо жёлтого
+                    html += '<div class="liquid-glass border border-emerald-500/20 rounded-lg p-3"><div class="text-xs font-bold text-emerald-400 mb-1 flex items-center gap-1">💡 Совет</div><p class="text-xs text-gray-400 leading-relaxed">' + recipe.tips + '</p></div>';
+                }
                 html += '</div></article>';
             }
             list.innerHTML = html;
