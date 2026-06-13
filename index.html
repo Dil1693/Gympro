@@ -3,308 +3,336 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Домашние тренировки и питание</title>
+    <title>Gympro - Домашние тренировки</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/fontsource-inter@5.0.0/index.min.css" rel="stylesheet">
     <style>
         * { -webkit-tap-highlight-color: transparent; }
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%);
+            color: #ffffff;
+            min-height: 100vh;
         }
+        
+        .liquid-glass {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37), inset 0 1px 0 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 0 rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .liquid-glass-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+            backdrop-filter: blur(24px) saturate(200%);
+            -webkit-backdrop-filter: blur(24px) saturate(200%);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15), inset 0 -1px 0 rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .liquid-glass-card:hover { transform: translateY(-2px); }
+        
+        .liquid-glass-button {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            transition: all 0.2s ease;
+        }
+        
+        .liquid-glass-button:hover { background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.08) 100%); }
+        .liquid-glass-button:active { transform: scale(0.98); }
+        
+        .liquid-glass-active {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.3) 0%, rgba(168, 85, 247, 0.2) 100%);
+            border: 1px solid rgba(99, 102, 241, 0.5);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+        
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
         .card-enter { animation: slideUp 0.4s ease-out forwards; opacity: 0; }
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .tab-active {
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
-            color: white;
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
-        }
-        .tab-inactive { background: white; color: #475569; }
-        .main-tab-active {
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
-            color: white;
-        }
-        .main-tab-inactive { background: white; color: #475569; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
         .tracker-btn { transition: all 0.15s ease; touch-action: manipulation; }
         .tracker-btn:active { transform: scale(0.92); }
+        
         .completed-card {
-            border-color: #10b981 !important;
-            background: linear-gradient(135deg, #ecfdf5, #f0fdf4) !important;
+            border-color: rgba(16, 185, 129, 0.5) !important;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0.05) 100%) !important;
+            box-shadow: 0 8px 32px rgba(16, 185, 129, 0.2) !important;
         }
+        
         input[type=number]::-webkit-inner-spin-button,
         input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
         input[type=number] { -moz-appearance: textfield; }
+        
+        /* ИСПРАВЛЕНИЕ: плавный ввод без моргания */
+        .reps-input {
+            transition: all 0.2s ease;
+        }
         .reps-input:focus {
             outline: none;
-            border-color: #6366f1 !important;
-            background: #eef2ff !important;
+            border-color: rgba(99, 102, 241, 0.6) !important;
+            background: rgba(99, 102, 241, 0.1) !important;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
         }
-        .recipe-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-        }
-        .recipe-card {
-            transition: all 0.3s ease;
-        }
-        .ingredient-tag {
-            transition: all 0.2s ease;
-        }
-        .ingredient-tag:hover {
-            transform: scale(1.05);
-        }
+        
+        .recipe-card { transition: all 0.3s ease; }
+        .ingredient-tag { transition: all 0.2s ease; }
+        .ingredient-tag:hover { transform: scale(1.05); }
         .ingredient-tag.selected {
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.4) 0%, rgba(168, 85, 247, 0.3) 100%);
             color: white;
-            border-color: #6366f1;
+            border-color: rgba(99, 102, 241, 0.6);
+            box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
         }
-        .match-badge {
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-        .calendar-day {
-            transition: all 0.2s ease;
-        }
-        .calendar-day:hover {
-            transform: scale(1.1);
-        }
+        
+        .match-badge { animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+        
+        .calendar-day { transition: all 0.2s ease; }
+        .calendar-day:hover { transform: scale(1.1); }
         .calendar-day.workout {
-            background: linear-gradient(135deg, #10b981, #059669);
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.6), rgba(5, 150, 105, 0.6));
             color: white;
             font-weight: bold;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.4);
         }
-        .calendar-day.today {
-            border: 2px solid #6366f1;
+        .calendar-day.today { border: 2px solid rgba(99, 102, 241, 0.6); }
+        
+        .modal-enter { animation: modalSlide 0.3s ease-out; }
+        @keyframes modalSlide { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
-        .modal-enter {
-            animation: modalSlide 0.3s ease-out;
+        
+        .glass-header {
+            background: rgba(10, 10, 10, 0.7);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
-        @keyframes modalSlide {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+        
+        .progress-bar-glass {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .progress-fill {
+            background: linear-gradient(90deg, rgba(99, 102, 241, 0.8), rgba(168, 85, 247, 0.8));
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
         }
     </style>
 </head>
-<body class="min-h-screen pb-32">
+<body class="pb-10">
 
     <!-- Header -->
-    <header class="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 text-white px-5 pt-12 pb-8 rounded-b-[2rem] shadow-lg relative overflow-hidden">
-        <div class="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -mr-16 -mt-16 blur-3xl"></div>
-        <div class="absolute bottom-0 left-0 w-32 h-32 bg-white/10 rounded-full -ml-12 -mb-12 blur-2xl"></div>
-        <div class="relative z-10">
-            <div class="flex items-center justify-between mb-2">
-                <div class="flex items-center gap-2">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                    <span class="text-xs font-semibold uppercase tracking-wider opacity-90">Фитнес и питание</span>
+    <header class="glass-header sticky top-0 z-40 px-5 pt-12 pb-6">
+        <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-3">
+                <div class="liquid-glass w-12 h-12 rounded-xl flex items-center justify-center">
+                    <svg class="w-7 h-7 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                 </div>
-                <button onclick="openCalendar()" class="bg-white/20 backdrop-blur-sm rounded-xl p-2 hover:bg-white/30 transition-colors">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                <div>
+                    <h1 class="text-2xl font-bold gradient-text">Gympro</h1>
+                    <p class="text-xs text-gray-400">Тренировки и питание</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-2">
+                <button onclick="resetProgress()" class="liquid-glass-button flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all active:scale-95">
+                    <svg class="w-5 h-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    <span class="text-sm font-medium text-gray-300">Сбросить</span>
+                </button>
+                
+                <button onclick="openCalendar()" class="liquid-glass-button flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all active:scale-95">
+                    <svg class="w-5 h-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    <span class="text-sm font-medium text-gray-300">Календарь</span>
                 </button>
             </div>
-            <h1 class="text-3xl font-bold leading-tight mb-2">Тренировки<br>и рацион</h1>
-            <p class="text-white/80 text-sm max-w-xs">Комплексный подход к достижению цели</p>
+        </div>
+
+        <div class="liquid-glass-card rounded-2xl p-4 mt-2">
+            <div class="flex items-center justify-between mb-3">
+                <span class="text-sm font-medium text-gray-300">Прогресс тренировки</span>
+                <span id="progressText" class="text-sm font-bold text-indigo-400">0 / 0</span>
+            </div>
+            <div class="progress-bar-glass w-full rounded-full h-2 overflow-hidden">
+                <div id="progressBar" class="progress-fill h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+            </div>
+            <div class="mt-3 flex gap-4 text-xs">
+                <div class="flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                    <span class="text-gray-400">Выполнено: <b id="completedCount" class="text-white">0</b></span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-gray-600"></span>
+                    <span class="text-gray-400">Всего: <b id="totalCount" class="text-white">0</b></span>
+                </div>
+            </div>
         </div>
     </header>
 
-    <!-- Calendar Modal -->
-    <div id="calendarModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden items-center justify-center p-5">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full modal-enter overflow-hidden">
-            <div class="bg-gradient-to-r from-indigo-600 to-purple-600 p-5 text-white">
-                <div class="flex items-center justify-between mb-3">
-                    <h3 class="text-lg font-bold">Календарь тренировок</h3>
-                    <button onclick="closeCalendar()" class="bg-white/20 rounded-lg p-1.5 hover:bg-white/30 transition-colors">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                    </button>
-                </div>
-                <div class="flex items-center justify-between">
-                    <button onclick="changeMonth(-1)" class="bg-white/20 rounded-lg p-2 hover:bg-white/30 transition-colors">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-                    </button>
-                    <span id="calendarMonthYear" class="font-semibold"></span>
-                    <button onclick="changeMonth(1)" class="bg-white/20 rounded-lg p-2 hover:bg-white/30 transition-colors">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                    </button>
-                </div>
-            </div>
-            <div class="p-5">
-                <div class="grid grid-cols-7 gap-1 mb-2">
-                    <div class="text-center text-xs font-semibold text-slate-400">Пн</div>
-                    <div class="text-center text-xs font-semibold text-slate-400">Вт</div>
-                    <div class="text-center text-xs font-semibold text-slate-400">Ср</div>
-                    <div class="text-center text-xs font-semibold text-slate-400">Чт</div>
-                    <div class="text-center text-xs font-semibold text-slate-400">Пт</div>
-                    <div class="text-center text-xs font-semibold text-slate-400">Сб</div>
-                    <div class="text-center text-xs font-semibold text-slate-400">Вс</div>
-                </div>
-                <div id="calendarDays" class="grid grid-cols-7 gap-1"></div>
-                <div class="mt-4 pt-4 border-t border-slate-200">
-                    <div class="flex items-center justify-between text-sm">
-                        <span class="text-slate-600">Тренировок в этом месяце:</span>
-                        <span id="workoutCount" class="font-bold text-indigo-600">0</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Main Tabs -->
     <div class="px-5 mt-6">
-        <div class="flex gap-2 bg-white p-1.5 rounded-2xl shadow-sm border border-slate-100">
-            <button onclick="switchMainTab('workouts')" id="tab-workouts" class="flex-1 py-3 rounded-xl text-sm font-bold transition-all main-tab-active">
-                💪 Упражнения
-            </button>
-            <button onclick="switchMainTab('nutrition')" id="tab-nutrition" class="flex-1 py-3 rounded-xl text-sm font-bold transition-all main-tab-inactive">
-                🥗 Питание
-            </button>
+        <div class="liquid-glass p-1.5 rounded-2xl flex gap-2">
+            <button onclick="switchMainTab('workouts')" id="tab-workouts" class="flex-1 py-3 rounded-xl text-sm font-bold transition-all liquid-glass-active text-white">💪 Упражнения</button>
+            <button onclick="switchMainTab('nutrition')" id="tab-nutrition" class="flex-1 py-3 rounded-xl text-sm font-bold transition-all liquid-glass-button text-gray-400">🥗 Питание</button>
         </div>
     </div>
 
     <!-- WORKOUTS SECTION -->
     <div id="workouts-section">
-        <!-- Inventory -->
         <div class="px-5 mt-6">
-            <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Ваш инвентарь</h2>
+            <h2 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Ваш инвентарь</h2>
             <div class="flex flex-wrap gap-2">
-                <span class="px-3 py-1.5 bg-white rounded-full text-xs font-medium text-slate-600 shadow-sm border border-slate-100 flex items-center gap-1.5">
-                    <span class="w-2 h-2 rounded-full bg-blue-400"></span> Резинка
-                </span>
-                <span class="px-3 py-1.5 bg-white rounded-full text-xs font-medium text-slate-600 shadow-sm border border-slate-100 flex items-center gap-1.5">
-                    <span class="w-2 h-2 rounded-full bg-slate-600"></span> Штанга
-                </span>
-                <span class="px-3 py-1.5 bg-white rounded-full text-xs font-medium text-slate-600 shadow-sm border border-slate-100 flex items-center gap-1.5">
-                    <span class="w-2 h-2 rounded-full bg-purple-400"></span> Коврик
-                </span>
-                <span class="px-3 py-1.5 bg-white rounded-full text-xs font-medium text-slate-600 shadow-sm border border-slate-100 flex items-center gap-1.5">
-                    <span class="w-2 h-2 rounded-full bg-orange-400"></span> Гантели
-                </span>
+                <span class="liquid-glass px-3 py-1.5 rounded-full text-xs font-medium text-gray-300 flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-blue-400"></span> Резинка</span>
+                <span class="liquid-glass px-3 py-1.5 rounded-full text-xs font-medium text-gray-300 flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-gray-400"></span> Штанга</span>
+                <span class="liquid-glass px-3 py-1.5 rounded-full text-xs font-medium text-gray-300 flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-purple-400"></span> Коврик</span>
+                <span class="liquid-glass px-3 py-1.5 rounded-full text-xs font-medium text-gray-300 flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-orange-400"></span> Гантели</span>
             </div>
         </div>
 
-        <!-- Progress -->
-        <div class="px-5 mt-4">
-            <div class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl p-4 text-white shadow-lg">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="text-xs font-semibold uppercase tracking-wider opacity-90">Прогресс тренировки</span>
-                    <span id="progressText" class="text-sm font-bold">0 / 0</span>
-                </div>
-                <div class="w-full bg-white/20 rounded-full h-2 overflow-hidden">
-                    <div id="progressBar" class="h-full bg-gradient-to-r from-green-400 to-emerald-300 rounded-full transition-all duration-500" style="width: 0%"></div>
-                </div>
-                <div class="mt-3 flex gap-4 text-xs">
-                    <div class="flex items-center gap-1.5">
-                        <span class="w-2 h-2 rounded-full bg-emerald-300"></span>
-                        <span class="opacity-90">Выполнено: <b id="completedCount">0</b></span>
-                    </div>
-                    <div class="flex items-center gap-1.5">
-                        <span class="w-2 h-2 rounded-full bg-white/60"></span>
-                        <span class="opacity-90">Всего: <b id="totalCount">0</b></span>
-                    </div>
-                </div>
-            </div>
+        <div class="sticky top-52 z-30 px-5 py-4 glass-header">
+            <div class="flex gap-2 overflow-x-auto hide-scrollbar" id="categoryTabs"></div>
         </div>
 
-        <!-- Category Tabs -->
-        <div class="sticky top-0 z-20 bg-slate-50/95 backdrop-blur-md py-4 px-5 border-b border-slate-200/50">
-            <div class="flex gap-2 overflow-x-auto hide-scrollbar pb-1" id="categoryTabs"></div>
-        </div>
-
-        <!-- Exercise List -->
-        <main class="px-5 py-6 space-y-5" id="exerciseList"></main>
-
-        <!-- Reset Button -->
-        <div class="fixed bottom-6 left-1/2 -translate-x-1/2 z-30">
-            <button onclick="resetProgress()" class="bg-white border border-slate-200 text-slate-600 px-5 py-3 rounded-full shadow-lg text-sm font-semibold flex items-center gap-2 hover:bg-slate-50 active:scale-95 transition-all">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                Сбросить прогресс
-            </button>
-        </div>
+        <main class="px-5 py-6 space-y-4" id="exerciseList"></main>
     </div>
 
     <!-- NUTRITION SECTION -->
     <div id="nutrition-section" class="hidden">
-        <!-- Nutrition Sub-tabs -->
         <div class="px-5 mt-6">
-            <div class="flex gap-2 bg-white p-1.5 rounded-2xl shadow-sm border border-slate-100">
-                <button onclick="switchNutritionTab('weight-loss')" id="nutab-weight-loss" class="flex-1 py-3 rounded-xl text-sm font-bold transition-all tab-active">
-                    🔥 Похудение
-                </button>
-                <button onclick="switchNutritionTab('muscle-gain')" id="nutab-muscle-gain" class="flex-1 py-3 rounded-xl text-sm font-bold transition-all tab-inactive">
-                    💪 Набор массы
-                </button>
+            <div class="liquid-glass p-1.5 rounded-2xl flex gap-2">
+                <button onclick="switchNutritionTab('weight-loss')" id="nutab-weight-loss" class="flex-1 py-3 rounded-xl text-sm font-bold transition-all liquid-glass-active text-white">🔥 Похудение</button>
+                <button onclick="switchNutritionTab('muscle-gain')" id="nutab-muscle-gain" class="flex-1 py-3 rounded-xl text-sm font-bold transition-all liquid-glass-button text-gray-400">💪 Набор массы</button>
             </div>
         </div>
 
-        <!-- Nutrition Info -->
         <div class="px-5 mt-6">
-            <div class="bg-gradient-to-r from-amber-400 to-orange-500 rounded-2xl p-4 text-white shadow-lg">
+            <div class="liquid-glass-card rounded-2xl p-5">
                 <div class="flex items-start gap-3">
-                    <div class="bg-white/20 rounded-xl p-2">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <div class="liquid-glass w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     </div>
                     <div class="flex-1">
-                        <h3 class="font-bold text-sm mb-1" id="nutritionTitle">Похудение</h3>
-                        <p class="text-xs opacity-90 leading-relaxed" id="nutritionDesc">Дефицит калорий 300-500 ккал. Высокий белок, умеренные углеводы, полезные жиры.</p>
+                        <h3 class="font-bold text-white mb-1" id="nutritionTitle">Похудение</h3>
+                        <p class="text-xs text-gray-400 leading-relaxed" id="nutritionDesc">Дефицит калорий 300-500 ккал. Высокий белок, умеренные углеводы.</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Ingredient Search -->
         <div class="px-5 mt-6">
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5">
+            <div class="liquid-glass-card rounded-2xl p-5">
                 <div class="flex items-center gap-2 mb-3">
-                    <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                    <h3 class="font-bold text-slate-800">Что есть в холодильнике?</h3>
+                    <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    <h3 class="font-bold text-white">Что есть в холодильнике?</h3>
                 </div>
-                <p class="text-xs text-slate-500 mb-4">Выберите продукты, которые у вас есть, и мы найдём подходящие рецепты</p>
+                <p class="text-xs text-gray-400 mb-4">Выберите продукты и мы найдём подходящие рецепты</p>
                 
                 <div class="flex flex-wrap gap-2 mb-4" id="quickIngredients"></div>
 
                 <div class="relative mb-3">
-                    <input type="text" id="customIngredient" placeholder="Добавить свой продукт..." class="w-full px-4 py-3 bg-slate-50 border-2 border-slate-200 rounded-xl text-sm focus:outline-none focus:border-indigo-500 transition-colors" onkeypress="handleIngredientInput(event)">
-                    <button onclick="addCustomIngredient()" class="absolute right-2 top-1/2 -translate-y-1/2 bg-indigo-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-indigo-700 transition-colors">+</button>
+                    <input type="text" id="customIngredient" placeholder="Добавить свой продукт..." class="w-full px-4 py-3 liquid-glass rounded-xl text-sm text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500/50 transition-colors border border-white/10">
+                    <button onclick="addCustomIngredient()" class="absolute right-2 top-1/2 -translate-y-1/2 bg-indigo-600/80 text-white px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-indigo-600 transition-colors">+</button>
                 </div>
 
                 <div id="selectedIngredients" class="flex flex-wrap gap-2 mb-3"></div>
 
                 <div class="flex gap-2">
-                    <button onclick="findRecipes()" class="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-xl text-sm font-bold hover:shadow-lg transition-all active:scale-95">
-                        🔍 Найти рецепты
-                    </button>
-                    <button onclick="clearIngredients()" class="px-4 py-3 bg-slate-100 text-slate-600 rounded-xl text-sm font-semibold hover:bg-slate-200 transition-colors">
-                        Очистить
-                    </button>
+                    <button onclick="findRecipes()" class="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-xl text-sm font-bold hover:shadow-lg hover:shadow-indigo-500/25 transition-all active:scale-95">🔍 Найти рецепты</button>
+                    <button onclick="clearIngredients()" class="liquid-glass-button px-4 py-3 text-gray-300 rounded-xl text-sm font-semibold hover:bg-white/10 transition-colors">Очистить</button>
                 </div>
             </div>
         </div>
 
-        <!-- Products Legend -->
         <div class="px-5 mt-6">
-            <h2 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Бюджетные продукты (Metro)</h2>
+            <h2 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Бюджетные продукты (Metro)</h2>
             <div class="flex flex-wrap gap-2">
-                <span class="px-3 py-1.5 bg-white rounded-full text-xs font-medium text-slate-600 shadow-sm border border-slate-100">🥚 Яйца</span>
-                <span class="px-3 py-1.5 bg-white rounded-full text-xs font-medium text-slate-600 shadow-sm border border-slate-100">🍗 Курица</span>
-                <span class="px-3 py-1.5 bg-white rounded-full text-xs font-medium text-slate-600 shadow-sm border border-slate-100">🥛 Творог</span>
-                <span class="px-3 py-1.5 bg-white rounded-full text-xs font-medium text-slate-600 shadow-sm border border-slate-100"> Овсянка</span>
-                <span class="px-3 py-1.5 bg-white rounded-full text-xs font-medium text-slate-600 shadow-sm border border-slate-100"> Рис</span>
-                <span class="px-3 py-1.5 bg-white rounded-full text-xs font-medium text-slate-600 shadow-sm border border-slate-100"> Овощи</span>
-                <span class="px-3 py-1.5 bg-white rounded-full text-xs font-medium text-slate-600 shadow-sm border border-slate-100">🍌 Бананы</span>
+                <span class="liquid-glass px-3 py-1.5 rounded-full text-xs font-medium text-gray-300">🥚 Яйца</span>
+                <span class="liquid-glass px-3 py-1.5 rounded-full text-xs font-medium text-gray-300">🍗 Курица</span>
+                <span class="liquid-glass px-3 py-1.5 rounded-full text-xs font-medium text-gray-300">🥛 Творог</span>
+                <span class="liquid-glass px-3 py-1.5 rounded-full text-xs font-medium text-gray-300"> Овсянка</span>
+                <span class="liquid-glass px-3 py-1.5 rounded-full text-xs font-medium text-gray-300">🍚 Рис</span>
+                <span class="liquid-glass px-3 py-1.5 rounded-full text-xs font-medium text-gray-300">🥦 Овощи</span>
+                <span class="liquid-glass px-3 py-1.5 rounded-full text-xs font-medium text-gray-300">🍌 Бананы</span>
             </div>
         </div>
 
-        <!-- Recipes List -->
-        <main class="px-5 py-6 space-y-5" id="recipeList"></main>
+        <main class="px-5 py-6 space-y-4" id="recipeList"></main>
+    </div>
+
+    <!-- Calendar Modal -->
+    <div id="calendarModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-5">
+        <div class="liquid-glass-card rounded-3xl max-w-md w-full modal-enter overflow-hidden border border-white/10">
+            <div class="bg-gradient-to-r from-indigo-600/80 to-purple-600/80 p-5">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-lg font-bold text-white">Календарь тренировок</h3>
+                    <button onclick="closeCalendar()" class="liquid-glass-button w-8 h-8 rounded-lg flex items-center justify-center">
+                        <svg class="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+                <div class="flex items-center justify-between">
+                    <button onclick="changeMonth(-1)" class="liquid-glass-button w-8 h-8 rounded-lg flex items-center justify-center">
+                        <svg class="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                    </button>
+                    <span id="calendarMonthYear" class="font-semibold text-white"></span>
+                    <button onclick="changeMonth(1)" class="liquid-glass-button w-8 h-8 rounded-lg flex items-center justify-center">
+                        <svg class="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </button>
+                </div>
+            </div>
+            <div class="p-5 bg-black/40">
+                <div class="grid grid-cols-7 gap-1 mb-2">
+                    <div class="text-center text-xs font-semibold text-gray-500">Пн</div>
+                    <div class="text-center text-xs font-semibold text-gray-500">Вт</div>
+                    <div class="text-center text-xs font-semibold text-gray-500">Ср</div>
+                    <div class="text-center text-xs font-semibold text-gray-500">Чт</div>
+                    <div class="text-center text-xs font-semibold text-gray-500">Пт</div>
+                    <div class="text-center text-xs font-semibold text-gray-500">Сб</div>
+                    <div class="text-center text-xs font-semibold text-gray-500">Вс</div>
+                </div>
+                <div id="calendarDays" class="grid grid-cols-7 gap-1"></div>
+                <div class="mt-4 pt-4 border-t border-white/10">
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="text-gray-400">Тренировок в этом месяце:</span>
+                        <span id="workoutCount" class="font-bold text-indigo-400">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
-        // ==================== EXERCISE IMAGES ====================
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.expand();
+        tg.setHeaderColor('#0a0a0a');
+        tg.setBackgroundColor('#0a0a0a');
+
+        function haptic(type) {
+            if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred(type || 'light');
+        }
+
         const exerciseImages = {
             1: 'https://i.postimg.cc/x19V21RS/1-Skrucivania-na-kovrike.png',
             2: 'https://i.postimg.cc/7ZqrkZV4/2-Russkie-skrucivania.jpg',
@@ -362,135 +390,91 @@
             54: 'https://i.postimg.cc/5t0cXKT7/48-Bolgarskie-vypady.jpg'
         };
 
-        // ==================== NUTRITION DATA ====================
         const nutritionInfo = {
-            'weight-loss': {
-                title: 'Похудение',
-                desc: 'Дефицит калорий 300-500 ккал. Высокий белок (1.6-2г/кг), умеренные углеводы, полезные жиры. 4-5 приёмов пищи.'
-            },
-            'muscle-gain': {
-                title: 'Набор мышечной массы',
-                desc: 'Профицит калорий 200-400 ккал. Высокий белок (2г/кг), сложные углеводы для энергии, здоровые жиры. 5-6 приёмов пищи.'
-            }
+            'weight-loss': { title: 'Похудение', desc: 'Дефицит калорий 300-500 ккал. Высокий белок (1.6-2г/кг), умеренные углеводы.' },
+            'muscle-gain': { title: 'Набор мышечной массы', desc: 'Профицит калорий 200-400 ккал. Высокий белок (2г/кг), сложные углеводы.' }
         };
 
-        const allIngredients = [
-            'Яйца', 'Куриная грудка', 'Творог', 'Овсянка', 'Рис', 'Гречка', 'Макароны',
-            'Банан', 'Молоко', 'Сыр', 'Помидор', 'Огурец', 'Лук', 'Морковь',
-            'Авокадо', 'Тунец', 'Говядина', 'Арахисовая паста', 'Мёд', 'Изюм',
-            'Манка', 'Сливки', 'Томатная паста', 'Кефир', 'Йогурт'
-        ];
-
+        const allIngredients = ['Яйца', 'Куриная грудка', 'Творог', 'Овсянка', 'Рис', 'Гречка', 'Макароны', 'Банан', 'Молоко', 'Сыр', 'Помидор', 'Огурец', 'Лук', 'Морковь', 'Авокадо', 'Тунец', 'Говядина', 'Арахисовая паста', 'Мёд', 'Изюм', 'Манка', 'Сливки', 'Томатная паста', 'Кефир', 'Йогурт'];
         let selectedIngredients = [];
 
         const recipes = {
             'weight-loss': [
-                { id: 101, title: 'Овсянка с яйцом и овощами', time: '15 мин', calories: 320, protein: 18, carbs: 42, fat: 8, ingredients: ['Овсянка', 'Яйца', 'Помидор', 'Огурец'], steps: ['Залейте овсянку кипятком (1:2), накройте крышкой на 5 минут', 'Пожарьте яйца на сухой сковороде или сварите всмятку', 'Нарежьте овощи кубиками', 'Смешайте овсянку с овощами, сверху выложите яйца', 'Посыпьте зеленью, посолите по вкусу'], tips: 'Можно добавить ложку оливкового масла для полезных жиров' },
-                { id: 102, title: 'Куриная грудка с гречкой и салатом', time: '30 мин', calories: 380, protein: 42, carbs: 38, fat: 6, ingredients: ['Куриная грудка', 'Гречка', 'Огурец', 'Помидор'], steps: ['Отварите гречку (1:2 с водой) 15-20 минут', 'Куриную грудку натрите специями, запеките в духовке 20 мин при 180°C или отварите', 'Нарежьте овощи для салата', 'Заправьте салат лимонным соком и щепоткой соли', 'Подавайте грудку с гречкой и салатом'], tips: 'Грудку можно замариновать в кефире на ночь для сочности' },
-                { id: 103, title: 'Творог с бананом и орехами', time: '5 мин', calories: 280, protein: 24, carbs: 28, fat: 9, ingredients: ['Творог', 'Банан'], steps: ['Выложите творог в тарелку', 'Нарежьте банан кружочками', 'Посыпьте творог бананом и измельчёнными орехами', 'При желании добавьте чайную ложку мёда'], tips: 'Отличный перекус после тренировки или на завтрак' },
-                { id: 104, title: 'Омлет с овощами и сыром', time: '10 мин', calories: 290, protein: 22, carbs: 8, fat: 18, ingredients: ['Яйца', 'Молоко', 'Помидор', 'Сыр'], steps: ['Взбейте яйца с молоком, солью и перцем', 'Нарежьте овощи мелкими кубиками', 'Вылейте яичную смесь на разогретую сковороду', 'Добавьте овощи, готовьте 3-4 минуты', 'Посыпьте тёртым сыром, накройте крышкой на 2 минуты'], tips: 'Можно добавить шпинат или брокколи для клетчатки' },
-                { id: 105, title: 'Куриные котлеты на пару с рисом', time: '35 мин', calories: 350, protein: 38, carbs: 40, fat: 5, ingredients: ['Куриная грудка', 'Рис', 'Яйца', 'Лук'], steps: ['Прокрутите куриное филе с луком через мясорубку', 'Добавьте яйцо, соль, перец, перемешайте', 'Сформируйте котлеты, готовьте на пару 20 минут', 'Отварите рис (1:2 с водой) 15 минут', 'Подавайте котлеты с рисом и свежими овощами'], tips: 'Можно добавить в фарш немного кабачка для сочности' },
-                { id: 106, title: 'Салат с тунцом и яйцом', time: '10 мин', calories: 240, protein: 28, carbs: 6, fat: 12, ingredients: ['Тунец', 'Яйца', 'Огурец'], steps: ['Отварите яйца вкрутую (10 минут), очистите и нарежьте', 'Нарежьте огурец полукольцами', 'Выложите на тарелку листья салата', 'Добавьте тунец (слить жидкость), яйца и огурец', 'Заправьте лимонным соком и маслом, перемешайте'], tips: 'Тунец в собственном соку менее калорийный, чем в масле' },
-                { id: 107, title: 'Куриный суп с овощами', time: '40 мин', calories: 180, protein: 22, carbs: 18, fat: 4, ingredients: ['Куриная грудка', 'Морковь', 'Лук', 'Помидор'], steps: ['Отварите курицу в кастрюле 20 минут', 'Нарежьте овощи кубиками', 'Добавьте овощи в бульон', 'Варите ещё 15-20 минут до мягкости овощей', 'Посолите, поперчите по вкусу'], tips: 'Можно добавить зелень и лавровый лист для аромата' },
-                { id: 108, title: 'Творожная запеканка без сахара', time: '35 мин', calories: 220, protein: 26, carbs: 18, fat: 6, ingredients: ['Творог', 'Яйца', 'Банан'], steps: ['Разомните банан вилкой', 'Смешайте творог с яйцами и бананом', 'Выложите в форму, смазанную маслом', 'Запекайте 25-30 минут при 180°C', 'Дайте остыть перед подачей'], tips: 'Банан заменяет сахар и придаёт сладость' },
-                { id: 109, title: 'Гречка с курицей и овощами', time: '30 мин', calories: 340, protein: 36, carbs: 42, fat: 5, ingredients: ['Гречка', 'Куриная грудка', 'Морковь', 'Лук'], steps: ['Нарежьте курицу кубиками, обжарьте 5 минут', 'Добавьте нарезанные лук и морковь', 'Готовьте 5-7 минут', 'Отварите гречку отдельно (1:2 с водой)', 'Смешайте гречку с курицей и овощами'], tips: 'Можно добавить чеснок и специи по вкусу' },
-                { id: 110, title: 'Яичница с помидорами и сыром', time: '10 мин', calories: 260, protein: 20, carbs: 6, fat: 16, ingredients: ['Яйца', 'Помидор', 'Сыр'], steps: ['Нарежьте помидор кружочками', 'Выложите на сковороду, обжарьте 2 минуты', 'Разбейте яйца поверх помидоров', 'Посыпьте тёртым сыром', 'Готовьте под крышкой 3-4 минуты'], tips: 'Идеальный завтрак за 10 минут' },
-                { id: 111, title: 'Куриные рулетики с творогом', time: '35 мин', calories: 290, protein: 38, carbs: 4, fat: 12, ingredients: ['Куриная грудка', 'Творог', 'Яйца'], steps: ['Отбейте куриную грудку', 'Смешайте творог с яйцом и специями', 'Выложите начинку на курицу, сверните рулетом', 'Запекайте 25 минут при 180°C', 'Нарежьте и подавайте'], tips: 'Можно добавить зелень в начинку' },
-                { id: 112, title: 'Овсяноблин с творогом', time: '15 мин', calories: 310, protein: 24, carbs: 38, fat: 8, ingredients: ['Овсянка', 'Яйца', 'Творог', 'Молоко'], steps: ['Смешайте овсянку с яйцом и молоком', 'Вылейте на сковороду, жарьте как блин', 'Переверните, готовьте ещё 2 минуты', 'Намажьте творог на одну половину', 'Сложите пополам и подавайте'], tips: 'Можно добавить банан или ягоды в начинку' },
-                { id: 113, title: 'Рыбные котлеты с рисом', time: '30 мин', calories: 320, protein: 32, carbs: 38, fat: 6, ingredients: ['Тунец', 'Рис', 'Яйца', 'Лук'], steps: ['Слейте жидкость с тунца, разомните вилкой', 'Добавьте яйцо, нарезанный лук, специи', 'Сформируйте котлеты', 'Запеките в духовке 15-20 минут', 'Подавайте с отварным рисом'], tips: 'Можно обжарить на сковороде вместо запекания' },
-                { id: 114, title: 'Салат с курицей и авокадо', time: '15 мин', calories: 280, protein: 28, carbs: 8, fat: 14, ingredients: ['Куриная грудка', 'Авокадо', 'Помидор', 'Огурец'], steps: ['Отварите или запеките куриную грудку, нарежьте', 'Нарежьте авокадо, помидор и огурец', 'Смешайте все ингредиенты', 'Заправьте лимонным соком и оливковым маслом', 'Посолите и поперчите по вкусу'], tips: 'Авокадо добавляет полезные жиры и сытость' },
-                { id: 115, title: 'Творог с овощами и зеленью', time: '5 мин', calories: 200, protein: 22, carbs: 8, fat: 8, ingredients: ['Творог', 'Огурец', 'Помидор'], steps: ['Выложите творог в тарелку', 'Нарежьте овощи мелкими кубиками', 'Смешайте с творогом', 'Добавьте соль, перец, зелень', 'Перемешайте и подавайте'], tips: 'Лёгкий и сытный перекус' }
+                { id: 101, title: 'Овсянка с яйцом и овощами', time: '15 мин', calories: 320, protein: 18, carbs: 42, fat: 8, ingredients: ['Овсянка', 'Яйца', 'Помидор', 'Огурец'], steps: ['Залейте овсянку кипятком', 'Пожарьте яйца', 'Нарежьте овощи', 'Смешайте всё'], tips: 'Добавьте оливковое масло' },
+                { id: 102, title: 'Куриная грудка с гречкой', time: '30 мин', calories: 380, protein: 42, carbs: 38, fat: 6, ingredients: ['Куриная грудка', 'Гречка', 'Огурец', 'Помидор'], steps: ['Отварите гречку', 'Запеките грудку', 'Нарежьте овощи', 'Подавайте вместе'], tips: 'Замаринуйте грудку в кефире' },
+                { id: 103, title: 'Творог с бананом', time: '5 мин', calories: 280, protein: 24, carbs: 28, fat: 9, ingredients: ['Творог', 'Банан'], steps: ['Выложите творог', 'Нарежьте банан', 'Смешайте'], tips: 'Отличный перекус' }
             ],
             'muscle-gain': [
-                { id: 201, title: 'Овсянка с бананом, арахисовой пастой и молоком', time: '10 мин', calories: 520, protein: 22, carbs: 72, fat: 16, ingredients: ['Овсянка', 'Молоко', 'Банан', 'Арахисовая паста', 'Мёд'], steps: ['Залейте овсянку горячим молоком, варите 5-7 минут', 'Нарежьте банан кружочками', 'Добавьте в кашу арахисовую пасту и мёд, перемешайте', 'Выложите сверху банан', 'Посыпьте корицей'], tips: 'Можно добавить протеин (1 скуп) для увеличения белка до 40г' },
-                { id: 202, title: 'Куриная грудка с рисом и авокадо', time: '30 мин', calories: 580, protein: 48, carbs: 62, fat: 14, ingredients: ['Куриная грудка', 'Рис', 'Авокадо'], steps: ['Отварите рис (1:2 с водой) 15-20 минут', 'Куриную грудку натрите специями, запеките 25 мин при 180°C', 'Нарежьте авокадо кубиками', 'Подавайте рис с курицей и авокадо', 'Полейте оливковым маслом'], tips: 'Авокадо добавляет полезные жиры и калории для набора массы' },
-                { id: 203, title: 'Творожная запеканка с изюмом', time: '45 мин', calories: 450, protein: 32, carbs: 48, fat: 12, ingredients: ['Творог', 'Яйца', 'Изюм', 'Манка', 'Молоко'], steps: ['Замочите изюм в горячей воде на 10 минут', 'Смешайте творог с яйцами, манкой и молоком', 'Добавьте изюм, перемешайте', 'Выложите в форму, смазанную маслом', 'Запекайте 30-35 минут при 180°C до золотистой корочки'], tips: 'Подавайте со сметаной или йогуртом для увеличения калорий' },
-                { id: 204, title: 'Паста с курицей и сыром', time: '25 мин', calories: 620, protein: 42, carbs: 68, fat: 18, ingredients: ['Макароны', 'Куриная грудка', 'Сыр', 'Сливки', 'Молоко'], steps: ['Отварите макароны al dente', 'Нарежьте курицу кубиками, обжарьте 5-7 минут', 'Добавьте сливки, тушите 3 минуты', 'Смешайте с макаронами', 'Посыпьте тёртым сыром'], tips: 'Можно добавить брокколи или шпинат для клетчатки' },
-                { id: 205, title: 'Гречка с говядиной и овощами', time: '40 мин', calories: 540, protein: 38, carbs: 58, fat: 14, ingredients: ['Говядина', 'Гречка', 'Лук', 'Морковь', 'Томатная паста'], steps: ['Нарежьте говядину кубиками, обжарьте 5 минут', 'Добавьте нарезанный лук и тёртую морковь, готовьте 5 минут', 'Добавьте томатную пасту, специи, тушите 20 минут', 'Отварите гречку отдельно', 'Подавайте гречку с мясным рагу'], tips: 'Говядина богата железом и креатином для роста мышц' },
-                { id: 206, title: 'Смузи для набора массы', time: '5 мин', calories: 480, protein: 28, carbs: 58, fat: 14, ingredients: ['Молоко', 'Банан', 'Творог', 'Овсянка', 'Арахисовая паста', 'Мёд'], steps: ['Залейте овсянку молоком на 5 минут', 'Добавьте банан, творог, арахисовую пасту и мёд', 'Взбейте блендером до однородности', 'Перелейте в стакан', 'Пейте сразу после тренировки'], tips: 'Можно добавить протеин (1 скуп) для увеличения белка до 50г' },
-                { id: 207, title: 'Куриные бёдра с картофелем', time: '50 мин', calories: 560, protein: 42, carbs: 52, fat: 18, ingredients: ['Куриная грудка', 'Картофель', 'Морковь', 'Лук'], steps: ['Нарежьте картофель кубиками', 'Обжарьте куриные бёдра 5 минут', 'Добавьте картофель, лук, морковь', 'Запекайте 35-40 минут при 180°C', 'Посолите и поперчите по вкусу'], tips: 'Картофель даёт сложные углеводы для энергии' },
-                { id: 208, title: 'Омлет с сыром и ветчиной', time: '10 мин', calories: 420, protein: 32, carbs: 4, fat: 28, ingredients: ['Яйца', 'Молоко', 'Сыр'], steps: ['Взбейте 4 яйца с молоком', 'Вылейте на сковороду', 'Добавьте нарезанный сыр', 'Готовьте под крышкой 5-7 минут', 'Сложите пополам и подавайте'], tips: 'Высококалорийный завтрак для набора массы' },
-                { id: 209, title: 'Рис с курицей и овощами', time: '30 мин', calories: 520, protein: 40, carbs: 62, fat: 10, ingredients: ['Рис', 'Куриная грудка', 'Морковь', 'Лук', 'Помидор'], steps: ['Отварите рис', 'Обжарьте курицу с луком и морковью', 'Добавьте нарезанный помидор', 'Тушите 10 минут', 'Смешайте с рисом'], tips: 'Можно добавить специи для вкуса' },
-                { id: 210, title: 'Творог с орехами и мёдом', time: '5 мин', calories: 380, protein: 28, carbs: 32, fat: 16, ingredients: ['Творог', 'Мёд'], steps: ['Выложите творог в тарелку', 'Полейте мёдом', 'Добавьте орехи', 'Перемешайте и подавайте'], tips: 'Быстрый и калорийный перекус' },
-                { id: 211, title: 'Макароны с тунцом и сыром', time: '20 мин', calories: 540, protein: 38, carbs: 64, fat: 12, ingredients: ['Макароны', 'Тунец', 'Сыр', 'Молоко'], steps: ['Отварите макароны', 'Слейте жидкость с тунца', 'Смешайте макароны с тунцом', 'Добавьте молоко и сыр', 'Прогрейте 2-3 минуты'], tips: 'Быстрый обед после тренировки' },
-                { id: 212, title: 'Куриные котлеты с гречкой', time: '35 мин', calories: 480, protein: 42, carbs: 48, fat: 10, ingredients: ['Куриная грудка', 'Гречка', 'Яйца', 'Лук'], steps: ['Прокрутите курицу с луком', 'Добавьте яйцо и специи', 'Сформируйте котлеты', 'Запеките 20 минут при 180°C', 'Подавайте с отварной гречкой'], tips: 'Можно приготовить на пару для диетического варианта' },
-                { id: 213, title: 'Овсянка с яйцами и сыром', time: '15 мин', calories: 460, protein: 28, carbs: 52, fat: 16, ingredients: ['Овсянка', 'Яйца', 'Молоко', 'Сыр'], steps: ['Сварите овсянку на молоке', 'Пожарьте яйца', 'Натрите сыр', 'Выложите яйца на овсянку', 'Посыпьте сыром'], tips: 'Сытный завтрак для набора массы' },
-                { id: 214, title: 'Говяжьи котлеты с рисом', time: '40 мин', calories: 520, protein: 36, carbs: 58, fat: 14, ingredients: ['Говядина', 'Рис', 'Яйца', 'Лук'], steps: ['Прокрутите говядину с луком', 'Добавьте яйцо и специи', 'Сформируйте котлеты', 'Запеките 25 минут', 'Подавайте с отварным рисом'], tips: 'Говядина богата креатином для роста мышц' },
-                { id: 215, title: 'Творожный смузи с бананом', time: '5 мин', calories: 360, protein: 26, carbs: 42, fat: 8, ingredients: ['Творог', 'Молоко', 'Банан', 'Мёд'], steps: ['Добавьте все ингредиенты в блендер', 'Взбейте до однородности', 'Перелейте в стакан', 'Пейте сразу'], tips: 'Идеален после тренировки' }
+                { id: 201, title: 'Овсянка с бананом и пастой', time: '10 мин', calories: 520, protein: 22, carbs: 72, fat: 16, ingredients: ['Овсянка', 'Молоко', 'Банан', 'Арахисовая паста', 'Мёд'], steps: ['Сварите овсянку', 'Добавьте пасту и мёд', 'Выложите банан'], tips: 'Добавьте протеин' },
+                { id: 202, title: 'Курица с рисом и авокадо', time: '30 мин', calories: 580, protein: 48, carbs: 62, fat: 14, ingredients: ['Куриная грудка', 'Рис', 'Авокадо'], steps: ['Отварите рис', 'Запеките курицу', 'Нарежьте авокадо'], tips: 'Полейте маслом' }
             ]
         };
 
-        // ==================== EXERCISES DATA ====================
         const categories = [
             { id: 'abs', name: 'Живот и бока', icon: '🔥' },
-            { id: 'arms', name: 'Руки', icon: '💪' },
+            { id: 'arms', name: 'Руки', icon: '' },
             { id: 'shoulders', name: 'Плечи', icon: '' },
-            { id: 'chest', name: 'Грудь', icon: '️' },
+            { id: 'chest', name: 'Грудь', icon: '🛡️' },
             { id: 'legs', name: 'Ноги', icon: '🦵' }
         ];
 
         const exercises = [
-            { id: 1, category: 'abs', title: 'Скручивания на коврике', inventory: ['Коврик'], description: 'Лягте на спину, согните колени, стопы на полу. Руки за головой или на груди. Поднимите лопатки от пола, напрягая пресс.', sets: 3, reps: 20 },
-            { id: 2, category: 'abs', title: 'Русские скручивания', inventory: ['Гантели', 'Коврик'], description: 'Сядьте на коврик, согните колени, слегка отклоните корпус назад. Держите гантель у груди. Поворачивайте корпус влево и вправо.', sets: 3, reps: 16 },
-            { id: 3, category: 'abs', title: 'Планка классическая', inventory: ['Коврик'], description: 'Встаньте в упор лёжа на предплечья. Тело образует прямую линию. Напрягите пресс и ягодицы.', sets: 3, reps: 45, repsUnit: 'сек' },
-            { id: 4, category: 'abs', title: 'Велосипед', inventory: ['Коврик'], description: 'Лягте на спину, руки за головой. Тяните локоть к противоположному колену, выпрямляя другую ногу.', sets: 3, reps: 20 },
-            { id: 5, category: 'abs', title: 'Подъём ног лёжа', inventory: ['Коврик'], description: 'Лягте на спину, руки вдоль тела. Поднимайте прямые ноги вверх до угла 90°, затем медленно опускайте.', sets: 3, reps: 15 },
-            { id: 6, category: 'abs', title: 'Боковая планка', inventory: ['Коврик'], description: 'Лягте на бок, обопритесь на предплечье. Поднимите таз, тело образует прямую линию.', sets: 3, reps: 30, repsUnit: 'сек' },
-            { id: 7, category: 'abs', title: 'Скалолаз', inventory: ['Коврик'], description: 'Встаньте в упор лёжа. Поочерёдно подтягивайте колени к груди в быстром темпе.', sets: 3, reps: 30 },
-            { id: 8, category: 'abs', title: 'Обратные скручивания', inventory: ['Коврик'], description: 'Лягте на спину, руки вдоль тела. Поднимите согнутые ноги и подтяните колени к груди.', sets: 3, reps: 15 },
-            { id: 9, category: 'abs', title: 'Ножницы', inventory: ['Коврик'], description: 'Лягте на спину, руки под ягодицами. Поднимите прямые ноги на 20-30 см от пола. Делайте перекрёстные движения.', sets: 3, reps: 20 },
-            { id: 10, category: 'abs', title: 'V-образные подъёмы', inventory: ['Коврик'], description: 'Лягте на спину. Одновременно поднимайте прямые ноги и корпус, тянитесь руками к носкам.', sets: 3, reps: 12 },
-            { id: 11, category: 'abs', title: 'Планка с касанием плеч', inventory: ['Коврик'], description: 'Встаньте в упор лёжа. Поочерёдно касайтесь рукой противоположного плеча.', sets: 3, reps: 20 },
-            { id: 12, category: 'abs', title: 'Подъём корпуса с поворотом', inventory: ['Коврик'], description: 'Лягте на спину, ноги согнуты. Поднимайте корпус и поворачивайте его, касаясь локтем противоположного колена.', sets: 3, reps: 16 },
-            { id: 13, category: 'abs', title: 'Планка с подъёмом ноги', inventory: ['Коврик'], description: 'Встаньте в классическую планку. Поочерёдно поднимайте каждую ногу вверх.', sets: 3, reps: 16 },
-            { id: 14, category: 'abs', title: 'Касание пяток лёжа', inventory: ['Коврик'], description: 'Лягте на спину, согните колени. Приподнимите лопатки и поочерёдно тянитесь руками к пяткам.', sets: 3, reps: 20 },
-
-            { id: 15, category: 'arms', title: 'Сгибания на бицепс', inventory: ['Гантели'], description: 'Встаньте прямо, держите гантели ладонями вперёд. Сгибайте руки в локтях, поднимая вес к плечам.', sets: 4, reps: 12 },
-            { id: 16, category: 'arms', title: 'Французский жим', inventory: ['Гантели'], description: 'Стоя или сидя, поднимите гантель над головой. Сгибайте руки в локтях, опуская вес за голову.', sets: 3, reps: 12 },
-            { id: 17, category: 'arms', title: 'Разгибания с резинкой', inventory: ['Резинка'], description: 'Закрепите резинку сверху. Возьмитесь за концы, прижмите локти к корпусу. Разгибайте руки вниз.', sets: 3, reps: 15 },
-            { id: 18, category: 'arms', title: 'Молотковые сгибания', inventory: ['Гантели'], description: 'Держите гантели ладонями к корпусу. Сгибайте руки в локтях, не разворачивая кисти.', sets: 3, reps: 12 },
-            { id: 19, category: 'arms', title: 'Отжимания узким хватом', inventory: ['Коврик'], description: 'Упор лёжа, руки поставлены близко друг к другу. Опускайтесь, прижимая локти к корпусу.', sets: 3, reps: 12 },
-            { id: 20, category: 'arms', title: 'Концентрированные сгибания', inventory: ['Гантели'], description: 'Сядьте, разведите ноги. Уприте локоть рабочей руки во внутреннюю часть бедра. Сгибайте руку.', sets: 3, reps: 10 },
-            { id: 21, category: 'arms', title: 'Разгибания гантели в наклоне', inventory: ['Гантели'], description: 'Наклоните корпус вперёд. Согните руку с гантелью под 90°. Разгибайте руку назад.', sets: 3, reps: 12 },
-            { id: 22, category: 'arms', title: 'Сгибания с резинкой', inventory: ['Резинка'], description: 'Встаньте на резинку. Возьмитесь за концы ладонями вперёд. Сгибайте руки в локтях.', sets: 3, reps: 15 },
-            { id: 23, category: 'arms', title: 'Обратные отжимания от стула', inventory: ['Коврик'], description: 'Сядьте на край стула, руки рядом с бёдрами. Опускайте таз вниз, сгибая руки.', sets: 3, reps: 12 },
-            { id: 24, category: 'arms', title: 'Разведения гантелей в наклоне', inventory: ['Гантели'], description: 'Наклоните корпус вперёд. Разводите руки в стороны, сводя лопатки.', sets: 3, reps: 12 },
-
-            { id: 25, category: 'shoulders', title: 'Жим гантелей сидя', inventory: ['Гантели', 'Коврик'], description: 'Сядьте, спина прямая. Держите гантели на уровне плеч. Выжимайте их вверх.', sets: 4, reps: 10 },
-            { id: 26, category: 'shoulders', title: 'Махи гантелями в стороны', inventory: ['Гантели'], description: 'Стоя, слегка согните локти. Поднимайте руки через стороны до уровня плеч.', sets: 3, reps: 15 },
-            { id: 27, category: 'shoulders', title: 'Тяга резинки к подбородку', inventory: ['Резинка'], description: 'Встаньте на резинку. Тяните резинку вверх вдоль тела к подбородку, разводя локти.', sets: 3, reps: 12 },
-            { id: 28, category: 'shoulders', title: 'Махи гантелями в наклоне', inventory: ['Гантели'], description: 'Наклоните корпус вперёд. Разводите руки в стороны, сводя лопатки.', sets: 3, reps: 15 },
-            { id: 29, category: 'shoulders', title: 'Жим Арнольда', inventory: ['Гантели'], description: 'Сидя, держите гантели ладонями к лицу. При подъёме разворачивайте кисти ладонями вперёд.', sets: 3, reps: 10 },
-            { id: 30, category: 'shoulders', title: 'Подъём гантелей перед собой', inventory: ['Гантели'], description: 'Стоя, держите гантели перед бёдрами. Поднимайте руки вперёд до уровня плеч.', sets: 3, reps: 12 },
-            { id: 31, category: 'shoulders', title: 'Разведения с резинкой', inventory: ['Резинка'], description: 'Возьмите резинку перед собой. Разводите руки в стороны, растягивая резинку.', sets: 3, reps: 15 },
-            { id: 32, category: 'shoulders', title: 'Шраги с гантелями', inventory: ['Гантели'], description: 'Стоя, держите гантели вдоль тела. Поднимайте плечи вверх к ушам.', sets: 3, reps: 15 },
-            { id: 33, category: 'shoulders', title: 'Тяга гантелей к подбородку', inventory: ['Гантели'], description: 'Стоя, держите гантели. Тяните их вверх, разводя локти в стороны до уровня плеч.', sets: 3, reps: 12 },
-
-            { id: 34, category: 'chest', title: 'Отжимания классические', inventory: ['Коврик'], description: 'Упритесь руками и носками в пол. Опускайте грудь к полу, сгибая локти под углом 45°.', sets: 4, reps: 15 },
-            { id: 35, category: 'chest', title: 'Жим гантелей лёжа', inventory: ['Гантели', 'Коврик'], description: 'Лягте на спину, согните колени. Держите гантели у груди. Выжимайте их вверх.', sets: 4, reps: 12 },
-            { id: 36, category: 'chest', title: 'Сведение рук с резинкой', inventory: ['Резинка'], description: 'Закрепите резинку за спиной. Возьмитесь за концы и вытяните руки вперёд. Разводите в стороны.', sets: 3, reps: 15 },
-            { id: 37, category: 'chest', title: 'Отжимания с широкой постановкой', inventory: ['Коврик'], description: 'Упор лёжа, руки расставлены шире плеч. Опускайтесь, разводя локти в стороны.', sets: 3, reps: 12 },
-            { id: 38, category: 'chest', title: 'Жим штанги лёжа на полу', inventory: ['Штанга', 'Коврик'], description: 'Лягте на спину, согните колени. Держите штангу у груди. Выжимайте вверх.', sets: 4, reps: 10 },
-            { id: 39, category: 'chest', title: 'Отжимания с ногами на возвышении', inventory: ['Коврик'], description: 'Поставьте ноги на стул, руки на полу. Увеличенная нагрузка на верхнюю часть грудных мышц.', sets: 3, reps: 10 },
-            { id: 40, category: 'chest', title: 'Пуловер с гантелью', inventory: ['Гантели', 'Коврик'], description: 'Лягте поперёк коврика. Держите гантель над грудью. Опускайте вес за голову.', sets: 3, reps: 12 },
-            { id: 41, category: 'chest', title: 'Отжимания с хлопком', inventory: ['Коврик'], description: 'Классические отжимания, но в верхней точке резко выжмите себя вверх.', sets: 3, reps: 8 },
-            { id: 42, category: 'chest', title: 'Разводка гантелей лёжа', inventory: ['Гантели', 'Коврик'], description: 'Лягте на спину, гантели над грудью. Разводите руки в стороны с лёгким сгибом.', sets: 3, reps: 12 },
-
-            { id: 43, category: 'legs', title: 'Приседания с гантелями', inventory: ['Гантели'], description: 'Держите гантели у плеч. Ноги на ширине плеч. Приседайте, отводя таз назад.', sets: 4, reps: 15 },
-            { id: 44, category: 'legs', title: 'Выпады вперёд', inventory: ['Гантели'], description: 'Стоя, держите гантели. Сделайте широкий шаг вперёд, опуская заднее колено к полу.', sets: 3, reps: 12 },
-            { id: 45, category: 'legs', title: 'Ягодичный мостик', inventory: ['Штанга', 'Гантели', 'Коврик'], description: 'Лягте на спину, согните колени. Поднимайте таз вверх, сжимая ягодицы.', sets: 4, reps: 15 },
-            { id: 46, category: 'legs', title: 'Разведения ног с резинкой', inventory: ['Резинка'], description: 'Наденьте резинку на бёдра. Встаньте в полуприсед. Делайте шаги в сторону.', sets: 3, reps: 20 },
-            { id: 47, category: 'legs', title: 'Румынская тяга', inventory: ['Гантели', 'Штанга'], description: 'Стоя, держите вес. Наклоняйте корпус вперёд, отводя таз назад. Спина прямая.', sets: 4, reps: 12 },
-            { id: 48, category: 'legs', title: 'Болгарские выпады', inventory: ['Гантели'], description: 'Встаньте спиной к стулу, положите одну ногу. Приседайте на передней ноге.', sets: 3, reps: 10 },
-            { id: 49, category: 'legs', title: 'Приседания сумо', inventory: ['Гантели'], description: 'Ноги шире плеч, носки наружу. Держите гантель между ног. Приседайте.', sets: 3, reps: 15 },
-            { id: 50, category: 'legs', title: 'Подъёмы на носки', inventory: ['Гантели'], description: 'Стоя, держите гантели. Поднимайтесь на носки как можно выше.', sets: 4, reps: 20 },
-            { id: 51, category: 'legs', title: 'Зашагивания на возвышение', inventory: ['Гантели'], description: 'Встаньте перед стулом. Шагните одной ногой на возвышение, выпрямите её.', sets: 3, reps: 12 },
-            { id: 52, category: 'legs', title: 'Приседания с прыжком', inventory: ['Коврик'], description: 'Присядьте, затем резко выпрыгните вверх. Мягко приземлитесь.', sets: 3, reps: 12 },
-            { id: 53, category: 'legs', title: 'Становая тяга на одной ноге', inventory: ['Гантели'], description: 'Стоя на одной ноге. Наклоняйте корпус вперёд, отводя свободную ногу назад.', sets: 3, reps: 10 },
-            { id: 54, category: 'legs', title: 'Боковые выпады', inventory: ['Гантели'], description: 'Стоя, держите гантели. Сделайте широкий шаг в сторону, сгибая одну ногу.', sets: 3, reps: 12 }
+            { id: 1, category: 'abs', title: 'Скручивания на коврике', inventory: ['Коврик'], description: 'Лягте на спину, согните колени. Руки за головой. Поднимите лопатки, напрягая пресс.', sets: 3, reps: 20 },
+            { id: 2, category: 'abs', title: 'Русские скручивания', inventory: ['Гантели', 'Коврик'], description: 'Сядьте, согните колени, отклоните корпус. Держите гантель. Поворачивайте корпус.', sets: 3, reps: 16 },
+            { id: 3, category: 'abs', title: 'Планка классическая', inventory: ['Коврик'], description: 'Упор лёжа на предплечья. Тело — прямая линия.', sets: 3, reps: 45, repsUnit: 'сек' },
+            { id: 4, category: 'abs', title: 'Велосипед', inventory: ['Коврик'], description: 'Лягте, руки за головой. Тяните локоть к колену.', sets: 3, reps: 20 },
+            { id: 5, category: 'abs', title: 'Подъём ног лёжа', inventory: ['Коврик'], description: 'Лягте, поднимайте ноги до 90°.', sets: 3, reps: 15 },
+            { id: 6, category: 'abs', title: 'Боковая планка', inventory: ['Коврик'], description: 'Лягте на бок, обопритесь на предплечье.', sets: 3, reps: 30, repsUnit: 'сек' },
+            { id: 7, category: 'abs', title: 'Скалолаз', inventory: ['Коврик'], description: 'Упор лёжа. Подтягивайте колени к груди.', sets: 3, reps: 30 },
+            { id: 8, category: 'abs', title: 'Обратные скручивания', inventory: ['Коврик'], description: 'Лягте, поднимите ноги к груди.', sets: 3, reps: 15 },
+            { id: 9, category: 'abs', title: 'Ножницы', inventory: ['Коврик'], description: 'Лягте, перекрёстные движения ногами.', sets: 3, reps: 20 },
+            { id: 10, category: 'abs', title: 'V-образные подъёмы', inventory: ['Коврик'], description: 'Поднимайте ноги и корпус одновременно.', sets: 3, reps: 12 },
+            { id: 11, category: 'abs', title: 'Планка с касанием плеч', inventory: ['Коврик'], description: 'В планке касайтесь рукой плеча.', sets: 3, reps: 20 },
+            { id: 12, category: 'abs', title: 'Подъём корпуса с поворотом', inventory: ['Коврик'], description: 'Поднимайте корпус с поворотом.', sets: 3, reps: 16 },
+            { id: 13, category: 'abs', title: 'Планка с подъёмом ноги', inventory: ['Коврик'], description: 'В планке поднимайте ногу.', sets: 3, reps: 16 },
+            { id: 14, category: 'abs', title: 'Касание пяток лёжа', inventory: ['Коврик'], description: 'Тянитесь руками к пяткам.', sets: 3, reps: 20 },
+            { id: 15, category: 'arms', title: 'Сгибания на бицепс', inventory: ['Гантели'], description: 'Стоя, гантели ладонями вперёд. Сгибайте руки.', sets: 4, reps: 12 },
+            { id: 16, category: 'arms', title: 'Французский жим', inventory: ['Гантели'], description: 'Гантель над головой. Опускайте за голову.', sets: 3, reps: 12 },
+            { id: 17, category: 'arms', title: 'Разгибания с резинкой', inventory: ['Резинка'], description: 'Резинка сверху. Разгибайте руки вниз.', sets: 3, reps: 15 },
+            { id: 18, category: 'arms', title: 'Молотковые сгибания', inventory: ['Гантели'], description: 'Гантели ладонями к корпусу.', sets: 3, reps: 12 },
+            { id: 19, category: 'arms', title: 'Отжимания узким хватом', inventory: ['Коврик'], description: 'Руки близко. Опускайтесь.', sets: 3, reps: 12 },
+            { id: 20, category: 'arms', title: 'Концентрированные сгибания', inventory: ['Гантели'], description: 'Сядьте, уприте локоть в бедро.', sets: 3, reps: 10 },
+            { id: 21, category: 'arms', title: 'Разгибания в наклоне', inventory: ['Гантели'], description: 'Наклон вперёд. Разгибайте руку.', sets: 3, reps: 12 },
+            { id: 22, category: 'arms', title: 'Сгибания с резинкой', inventory: ['Резинка'], description: 'Встаньте на резинку. Сгибайте.', sets: 3, reps: 15 },
+            { id: 23, category: 'arms', title: 'Отжимания от стула', inventory: ['Коврик'], description: 'Руки на стуле, опускайте таз.', sets: 3, reps: 12 },
+            { id: 24, category: 'arms', title: 'Разведения в наклоне', inventory: ['Гантели'], description: 'Наклон. Разводите руки.', sets: 3, reps: 12 },
+            { id: 25, category: 'shoulders', title: 'Жим гантелей сидя', inventory: ['Гантели', 'Коврик'], description: 'Сидя, выжимайте вверх.', sets: 4, reps: 10 },
+            { id: 26, category: 'shoulders', title: 'Махи в стороны', inventory: ['Гантели'], description: 'Поднимайте руки до плеч.', sets: 3, reps: 15 },
+            { id: 27, category: 'shoulders', title: 'Тяга резинки', inventory: ['Резинка'], description: 'Тяните к подбородку.', sets: 3, reps: 12 },
+            { id: 28, category: 'shoulders', title: 'Махи в наклоне', inventory: ['Гантели'], description: 'Наклон. Разводите руки.', sets: 3, reps: 15 },
+            { id: 29, category: 'shoulders', title: 'Жим Арнольда', inventory: ['Гантели'], description: 'Разворачивайте кисти.', sets: 3, reps: 10 },
+            { id: 30, category: 'shoulders', title: 'Подъём перед собой', inventory: ['Гантели'], description: 'Поднимайте вперёд.', sets: 3, reps: 12 },
+            { id: 31, category: 'shoulders', title: 'Разведения с резинкой', inventory: ['Резинка'], description: 'Резинка перед собой.', sets: 3, reps: 15 },
+            { id: 32, category: 'shoulders', title: 'Шраги', inventory: ['Гантели'], description: 'Поднимайте плечи.', sets: 3, reps: 15 },
+            { id: 33, category: 'shoulders', title: 'Тяга к подбородку', inventory: ['Гантели'], description: 'Тяните вверх.', sets: 3, reps: 12 },
+            { id: 34, category: 'chest', title: 'Отжимания', inventory: ['Коврик'], description: 'Упор лёжа. Локти под 45°.', sets: 4, reps: 15 },
+            { id: 35, category: 'chest', title: 'Жим гантелей', inventory: ['Гантели', 'Коврик'], description: 'Лёжа, выжимайте.', sets: 4, reps: 12 },
+            { id: 36, category: 'chest', title: 'Сведение с резинкой', inventory: ['Резинка'], description: 'Резинка за спиной.', sets: 3, reps: 15 },
+            { id: 37, category: 'chest', title: 'Широкие отжимания', inventory: ['Коврик'], description: 'Руки шире плеч.', sets: 3, reps: 12 },
+            { id: 38, category: 'chest', title: 'Жим штанги', inventory: ['Штанга', 'Коврик'], description: 'Лёжа, выжимайте.', sets: 4, reps: 10 },
+            { id: 39, category: 'chest', title: 'Отжимания с ногами вверх', inventory: ['Коврик'], description: 'Ноги на стуле.', sets: 3, reps: 10 },
+            { id: 40, category: 'chest', title: 'Пуловер', inventory: ['Гантели', 'Коврик'], description: 'За голову.', sets: 3, reps: 12 },
+            { id: 41, category: 'chest', title: 'Отжимания с хлопком', inventory: ['Коврик'], description: 'Резко вверх.', sets: 3, reps: 8 },
+            { id: 42, category: 'chest', title: 'Разводка', inventory: ['Гантели', 'Коврик'], description: 'Разводите руки.', sets: 3, reps: 12 },
+            { id: 43, category: 'legs', title: 'Приседания', inventory: ['Гантели'], description: 'Гантели у плеч.', sets: 4, reps: 15 },
+            { id: 44, category: 'legs', title: 'Выпады', inventory: ['Гантели'], description: 'Шаг вперёд.', sets: 3, reps: 12 },
+            { id: 45, category: 'legs', title: 'Ягодичный мостик', inventory: ['Штанга', 'Гантели', 'Коврик'], description: 'Поднимайте таз.', sets: 4, reps: 15 },
+            { id: 46, category: 'legs', title: 'Разведения ног', inventory: ['Резинка'], description: 'Резинка на бёдрах.', sets: 3, reps: 20 },
+            { id: 47, category: 'legs', title: 'Румынская тяга', inventory: ['Гантели', 'Штанга'], description: 'Наклон вперёд.', sets: 4, reps: 12 },
+            { id: 48, category: 'legs', title: 'Болгарские выпады', inventory: ['Гантели'], description: 'Нога на стуле.', sets: 3, reps: 10 },
+            { id: 49, category: 'legs', title: 'Сумо', inventory: ['Гантели'], description: 'Ноги широко.', sets: 3, reps: 15 },
+            { id: 50, category: 'legs', title: 'Подъёмы на носки', inventory: ['Гантели'], description: 'На носки.', sets: 4, reps: 20 },
+            { id: 51, category: 'legs', title: 'Зашагивания', inventory: ['Гантели'], description: 'На стул.', sets: 3, reps: 12 },
+            { id: 52, category: 'legs', title: 'Приседания с прыжком', inventory: ['Коврик'], description: 'Прыжок вверх.', sets: 3, reps: 12 },
+            { id: 53, category: 'legs', title: 'Тяга на одной ноге', inventory: ['Гантели'], description: 'На одной ноге.', sets: 3, reps: 10 },
+            { id: 54, category: 'legs', title: 'Боковые выпады', inventory: ['Гантели'], description: 'Шаг в сторону.', sets: 3, reps: 12 }
         ];
 
-        // ==================== STATE ====================
         let currentCategory = 'abs';
         let currentMainTab = 'workouts';
         let currentNutritionTab = 'weight-loss';
@@ -503,153 +487,92 @@
             if (saved) progress = JSON.parse(saved);
             const savedCalendar = localStorage.getItem('workoutCalendar');
             if (savedCalendar) workoutCalendar = JSON.parse(savedCalendar);
-        } catch (e) {
-            progress = {};
-            workoutCalendar = {};
-        }
+        } catch (e) { progress = {}; workoutCalendar = {}; }
 
-        // ==================== CALENDAR FUNCTIONS ====================
-        function openCalendar() {
-            document.getElementById('calendarModal').classList.remove('hidden');
-            document.getElementById('calendarModal').classList.add('flex');
-            renderCalendar();
-        }
-
-        function closeCalendar() {
-            document.getElementById('calendarModal').classList.add('hidden');
-            document.getElementById('calendarModal').classList.remove('flex');
-        }
-
-        function changeMonth(delta) {
-            currentCalendarDate.setMonth(currentCalendarDate.getMonth() + delta);
-            renderCalendar();
-        }
+        function openCalendar() { haptic('medium'); document.getElementById('calendarModal').classList.remove('hidden'); document.getElementById('calendarModal').classList.add('flex'); renderCalendar(); }
+        function closeCalendar() { document.getElementById('calendarModal').classList.add('hidden'); document.getElementById('calendarModal').classList.remove('flex'); }
+        function changeMonth(delta) { haptic('light'); currentCalendarDate.setMonth(currentCalendarDate.getMonth() + delta); renderCalendar(); }
 
         function renderCalendar() {
             const year = currentCalendarDate.getFullYear();
             const month = currentCalendarDate.getMonth();
             const monthNames = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
-            
             document.getElementById('calendarMonthYear').textContent = monthNames[month] + ' ' + year;
-            
             const firstDay = new Date(year, month, 1);
             const lastDay = new Date(year, month + 1, 0);
             const daysInMonth = lastDay.getDate();
             const startDayOfWeek = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1;
-            
             const today = new Date();
             const isCurrentMonth = today.getFullYear() === year && today.getMonth() === month;
-            
-            let workoutCount = 0;
-            let html = '';
-            
-            for (let i = 0; i < startDayOfWeek; i++) {
-                html += '<div></div>';
-            }
-            
+            let workoutCount = 0, html = '';
+            for (let i = 0; i < startDayOfWeek; i++) html += '<div></div>';
             for (let day = 1; day <= daysInMonth; day++) {
                 const dateKey = year + '-' + String(month + 1).padStart(2, '0') + '-' + String(day).padStart(2, '0');
                 const hasWorkout = workoutCalendar[dateKey];
                 const isToday = isCurrentMonth && today.getDate() === day;
-                
                 if (hasWorkout) workoutCount++;
-                
-                html += '<div class="calendar-day aspect-square flex items-center justify-center rounded-lg text-sm cursor-pointer ' + 
-                    (hasWorkout ? 'workout' : 'bg-slate-50 text-slate-700 hover:bg-slate-100') + 
-                    (isToday ? ' today' : '') + 
-                    '" onclick="toggleWorkoutDay(\'' + dateKey + '\')">' + day + '</div>';
+                html += '<div class="calendar-day aspect-square flex items-center justify-center rounded-lg text-xs cursor-pointer ' + (hasWorkout ? 'workout' : 'liquid-glass text-gray-400') + (isToday ? ' today' : '') + '" onclick="toggleWorkoutDay(\'' + dateKey + '\')">' + day + '</div>';
             }
-            
             document.getElementById('calendarDays').innerHTML = html;
             document.getElementById('workoutCount').textContent = workoutCount;
         }
 
-        function toggleWorkoutDay(dateKey) {
-            if (workoutCalendar[dateKey]) {
-                delete workoutCalendar[dateKey];
-            } else {
-                workoutCalendar[dateKey] = true;
-            }
-            try {
-                localStorage.setItem('workoutCalendar', JSON.stringify(workoutCalendar));
-            } catch (e) {}
-            renderCalendar();
-        }
+        function toggleWorkoutDay(dateKey) { haptic('light'); workoutCalendar[dateKey] = !workoutCalendar[dateKey]; try { localStorage.setItem('workoutCalendar', JSON.stringify(workoutCalendar)); } catch (e) {} renderCalendar(); }
+        function saveProgress() { try { localStorage.setItem('workoutProgress', JSON.stringify(progress)); } catch (e) {} }
+        function getProgress(exId) { if (!progress[exId]) progress[exId] = { completedSets: 0, reps: 0, done: false }; return progress[exId]; }
 
-        // ==================== OTHER FUNCTIONS ====================
-        function saveProgress() {
-            try {
-                localStorage.setItem('workoutProgress', JSON.stringify(progress));
-            } catch (e) {}
-        }
-
-        function getProgress(exId) {
-            if (!progress[exId]) {
-                progress[exId] = { completedSets: 0, reps: 0, done: false };
-            }
-            return progress[exId];
+        // ИСПРАВЛЕНИЕ: обновляем только счётчики без перерисовки
+        function updateProgressSilent(exId, updates) {
+            Object.assign(getProgress(exId), updates);
+            saveProgress();
+            // Обновляем только текст счётчиков — без перерисовки всего списка
+            updateHeaderProgress();
+            const dateKey = new Date().getFullYear() + '-' + String(new Date().getMonth() + 1).padStart(2, '0') + '-' + String(new Date().getDate()).padStart(2, '0');
+            if (!workoutCalendar[dateKey]) { workoutCalendar[dateKey] = true; try { localStorage.setItem('workoutCalendar', JSON.stringify(workoutCalendar)); } catch (e) {} }
         }
 
         function updateProgress(exId, updates) {
-            const p = getProgress(exId);
-            Object.assign(p, updates);
-            saveProgress();
+            updateProgressSilent(exId, updates);
             renderExercises();
-            updateHeaderProgress();
-            
-            const today = new Date();
-            const dateKey = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
-            if (!workoutCalendar[dateKey]) {
-                workoutCalendar[dateKey] = true;
-                try {
-                    localStorage.setItem('workoutCalendar', JSON.stringify(workoutCalendar));
-                } catch (e) {}
-            }
         }
 
         function updateHeaderProgress() {
             const total = exercises.length;
-            const completed = exercises.filter(function(ex) {
-                return getProgress(ex.id).done;
-            }).length;
-            const pct = total > 0 ? (completed / total) * 100 : 0;
+            const completed = exercises.filter(ex => getProgress(ex.id).done).length;
             document.getElementById('progressText').textContent = completed + ' / ' + total;
             document.getElementById('completedCount').textContent = completed;
             document.getElementById('totalCount').textContent = total;
-            document.getElementById('progressBar').style.width = pct + '%';
+            document.getElementById('progressBar').style.width = (total > 0 ? (completed / total) * 100 : 0) + '%';
         }
 
-        function resetProgress() {
-            if (confirm('Сбросить весь прогресс тренировки?')) {
-                progress = {};
-                saveProgress();
-                renderExercises();
-                updateHeaderProgress();
-            }
+        function resetProgress() { 
+            haptic('heavy'); 
+            if (confirm('Сбросить прогресс?')) { 
+                progress = {}; 
+                saveProgress(); 
+                renderExercises(); 
+                updateHeaderProgress(); 
+            } 
         }
 
         function switchMainTab(tab) {
+            haptic('light');
             currentMainTab = tab;
-            document.getElementById('tab-workouts').className = 'flex-1 py-3 rounded-xl text-sm font-bold transition-all ' + (tab === 'workouts' ? 'main-tab-active' : 'main-tab-inactive');
-            document.getElementById('tab-nutrition').className = 'flex-1 py-3 rounded-xl text-sm font-bold transition-all ' + (tab === 'nutrition' ? 'main-tab-active' : 'main-tab-inactive');
+            document.getElementById('tab-workouts').className = 'flex-1 py-3 rounded-xl text-sm font-bold transition-all ' + (tab === 'workouts' ? 'liquid-glass-active text-white' : 'liquid-glass-button text-gray-400');
+            document.getElementById('tab-nutrition').className = 'flex-1 py-3 rounded-xl text-sm font-bold transition-all ' + (tab === 'nutrition' ? 'liquid-glass-active text-white' : 'liquid-glass-button text-gray-400');
             document.getElementById('workouts-section').classList.toggle('hidden', tab !== 'workouts');
             document.getElementById('nutrition-section').classList.toggle('hidden', tab !== 'nutrition');
-            
-            if (tab === 'nutrition') {
-                renderQuickIngredients();
-                renderRecipes();
-            }
+            if (tab === 'nutrition') { renderQuickIngredients(); renderRecipes(); }
         }
 
         function switchNutritionTab(tab) {
+            haptic('light');
             currentNutritionTab = tab;
-            document.getElementById('nutab-weight-loss').className = 'flex-1 py-3 rounded-xl text-sm font-bold transition-all ' + (tab === 'weight-loss' ? 'tab-active' : 'tab-inactive');
-            document.getElementById('nutab-muscle-gain').className = 'flex-1 py-3 rounded-xl text-sm font-bold transition-all ' + (tab === 'muscle-gain' ? 'tab-active' : 'tab-inactive');
-            
+            document.getElementById('nutab-weight-loss').className = 'flex-1 py-3 rounded-xl text-sm font-bold transition-all ' + (tab === 'weight-loss' ? 'liquid-glass-active text-white' : 'liquid-glass-button text-gray-400');
+            document.getElementById('nutab-muscle-gain').className = 'flex-1 py-3 rounded-xl text-sm font-bold transition-all ' + (tab === 'muscle-gain' ? 'liquid-glass-active text-white' : 'liquid-glass-button text-gray-400');
             const info = nutritionInfo[tab];
             document.getElementById('nutritionTitle').textContent = info.title;
             document.getElementById('nutritionDesc').textContent = info.desc;
-            
             renderRecipes();
         }
 
@@ -659,32 +582,27 @@
             for (let i = 0; i < allIngredients.length; i++) {
                 const ing = allIngredients[i];
                 const isSelected = selectedIngredients.indexOf(ing) !== -1;
-                html += '<button onclick="toggleIngredient(\'' + ing + '\')" class="ingredient-tag px-3 py-1.5 rounded-full text-xs font-medium border-2 transition-all ' + (isSelected ? 'selected border-indigo-600' : 'bg-white border-slate-200 text-slate-600 hover:border-indigo-400') + '">' + ing + '</button>';
+                html += '<button onclick="toggleIngredient(\'' + ing + '\')" class="ingredient-tag liquid-glass px-3 py-1.5 rounded-full text-xs font-medium text-gray-300 border border-white/10 transition-all ' + (isSelected ? 'selected' : 'hover:bg-white/10') + '">' + ing + '</button>';
             }
             container.innerHTML = html;
         }
 
         function toggleIngredient(ingredient) {
+            haptic('light');
             const idx = selectedIngredients.indexOf(ingredient);
-            if (idx === -1) {
-                selectedIngredients.push(ingredient);
-            } else {
-                selectedIngredients.splice(idx, 1);
-            }
+            if (idx === -1) selectedIngredients.push(ingredient);
+            else selectedIngredients.splice(idx, 1);
             renderQuickIngredients();
             renderSelectedIngredients();
         }
 
         function renderSelectedIngredients() {
             const container = document.getElementById('selectedIngredients');
-            if (selectedIngredients.length === 0) {
-                container.innerHTML = '';
-                return;
-            }
-            let html = '<div class="text-xs font-semibold text-slate-500 mb-1">Выбрано:</div>';
+            if (selectedIngredients.length === 0) { container.innerHTML = ''; return; }
+            let html = '<div class="text-xs font-semibold text-gray-500 mb-1">Выбрано:</div>';
             for (let i = 0; i < selectedIngredients.length; i++) {
                 const ing = selectedIngredients[i];
-                html += '<span class="inline-flex items-center gap-1 px-2.5 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs font-medium"><span>' + ing + '</span><button onclick="toggleIngredient(\'' + ing + '\')" class="hover:text-indigo-900">×</button></span>';
+                html += '<span class="inline-flex items-center gap-1 px-2.5 py-1 bg-indigo-600/30 text-indigo-300 rounded-full text-xs font-medium border border-indigo-500/30"><span>' + ing + '</span><button onclick="toggleIngredient(\'' + ing + '\')" class="hover:text-white">×</button></span>';
             }
             container.innerHTML = html;
         }
@@ -700,35 +618,16 @@
             }
         }
 
-        function handleIngredientInput(event) {
-            if (event.key === 'Enter') {
-                addCustomIngredient();
-            }
-        }
-
-        function clearIngredients() {
-            selectedIngredients = [];
-            renderQuickIngredients();
-            renderSelectedIngredients();
-            renderRecipes();
-        }
-
-        function findRecipes() {
-            renderRecipes();
-        }
+        function handleIngredientInput(event) { if (event.key === 'Enter') addCustomIngredient(); }
+        function clearIngredients() { selectedIngredients = []; renderQuickIngredients(); renderSelectedIngredients(); renderRecipes(); }
+        function findRecipes() { haptic('medium'); renderRecipes(); }
 
         function calculateMatch(recipe) {
             if (selectedIngredients.length === 0) return 0;
             let matchCount = 0;
             for (let i = 0; i < recipe.ingredients.length; i++) {
-                const recipeIng = recipe.ingredients[i];
                 for (let j = 0; j < selectedIngredients.length; j++) {
-                    const selectedIng = selectedIngredients[j];
-                    if (recipeIng.toLowerCase().indexOf(selectedIng.toLowerCase()) !== -1 || 
-                        selectedIng.toLowerCase().indexOf(recipeIng.toLowerCase()) !== -1) {
-                        matchCount++;
-                        break;
-                    }
+                    if (recipe.ingredients[i].toLowerCase().indexOf(selectedIngredients[j].toLowerCase()) !== -1 || selectedIngredients[j].toLowerCase().indexOf(recipe.ingredients[i].toLowerCase()) !== -1) { matchCount++; break; }
                 }
             }
             return Math.round((matchCount / recipe.ingredients.length) * 100);
@@ -740,32 +639,22 @@
             for (let i = 0; i < categories.length; i++) {
                 const cat = categories[i];
                 const isActive = currentCategory === cat.id;
-                html += '<button onclick="switchCategory(\'' + cat.id + '\')" class="px-4 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap transition-all duration-300 ' + (isActive ? 'tab-active' : 'tab-inactive') + '">' + cat.icon + ' ' + cat.name + '</button>';
+                html += '<button onclick="switchCategory(\'' + cat.id + '\')" class="px-4 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap transition-all duration-300 ' + (isActive ? 'liquid-glass-active text-white' : 'liquid-glass-button text-gray-400') + '">' + cat.icon + ' ' + cat.name + '</button>';
             }
             tabsContainer.innerHTML = html;
         }
 
         function getInventoryColor(item) {
-            const colors = {
-                'Резинка': 'bg-blue-50 text-blue-600 border-blue-100',
-                'Штанга': 'bg-slate-100 text-slate-700 border-slate-200',
-                'Коврик': 'bg-purple-50 text-purple-600 border-purple-100',
-                'Гантели': 'bg-orange-50 text-orange-600 border-orange-100'
-            };
-            return colors[item] || 'bg-gray-50 text-gray-600 border-gray-100';
+            const colors = { 'Резинка': 'text-blue-400 border-blue-500/30', 'Штанга': 'text-gray-400 border-gray-500/30', 'Коврик': 'text-purple-400 border-purple-500/30', 'Гантели': 'text-orange-400 border-orange-500/30' };
+            return colors[item] || 'text-gray-400 border-gray-500/30';
         }
 
         function renderExercises() {
             const list = document.getElementById('exerciseList');
-            const filtered = [];
-            for (let i = 0; i < exercises.length; i++) {
-                if (exercises[i].category === currentCategory) {
-                    filtered.push(exercises[i]);
-                }
-            }
-            const categoryInfo = categories.find(function(c) { return c.id === currentCategory; });
+            const filtered = exercises.filter(ex => ex.category === currentCategory);
+            const categoryInfo = categories.find(c => c.id === currentCategory);
 
-            let html = '<div class="flex items-center justify-between mb-2"><h2 class="text-xl font-bold text-slate-800">' + categoryInfo.icon + ' ' + categoryInfo.name + '</h2><span class="text-xs font-medium text-slate-400">' + filtered.length + ' упражнений</span></div>';
+            let html = '<div class="flex items-center justify-between mb-2"><h2 class="text-xl font-bold text-white">' + categoryInfo.icon + ' ' + categoryInfo.name + '</h2><span class="text-xs font-medium text-gray-500">' + filtered.length + ' упражнений</span></div>';
 
             for (let i = 0; i < filtered.length; i++) {
                 const ex = filtered[i];
@@ -773,167 +662,91 @@
                 const isDone = p.done;
                 const repsUnit = ex.repsUnit || 'раз';
                 const img = exerciseImages[ex.id] || '';
-                const invHtml = ex.inventory.map(function(inv) {
-                    return '<span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border ' + getInventoryColor(inv) + ' backdrop-blur-sm">' + inv + '</span>';
-                }).join('');
+                const invHtml = ex.inventory.map(inv => '<span class="liquid-glass px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border border-white/10 ' + getInventoryColor(inv).split(' ')[0] + '">' + inv + '</span>').join('');
 
-                html += '<article class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden card-enter ' + (isDone ? 'completed-card' : '') + '" style="animation-delay: ' + (i * 0.06) + 's">';
-                
-                // Image container with contain fit - NO CROPPING
-                html += '<div class="relative" style="height: 320px; background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%); overflow: hidden;">';
-                if (img) {
-                    html += '<img src="' + img + '" alt="' + ex.title + '" class="w-full h-full" style="object-fit: contain; padding: 16px;" loading="lazy">';
-                }
+                html += '<article class="liquid-glass-card rounded-2xl overflow-hidden card-enter ' + (isDone ? 'completed-card' : '') + '" style="animation-delay: ' + (i * 0.06) + 's">';
+                html += '<div class="relative" style="height: 280px; background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%); overflow: hidden;">';
+                if (img) html += '<img src="' + img + '" alt="' + ex.title + '" class="w-full h-full" style="object-fit: contain; padding: 16px; opacity: 0.9;" loading="lazy">';
                 html += '<div class="absolute top-3 left-3 flex flex-wrap gap-1.5 max-w-[70%]">' + invHtml + '</div>';
-                if (isDone) {
-                    html += '<div class="absolute inset-0 bg-emerald-500/10 flex items-center justify-center pointer-events-none"><div class="bg-emerald-500 text-white rounded-full p-3 shadow-lg"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg></div></div>';
-                }
-                html += '<div class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-full px-2.5 py-1 text-[10px] font-bold text-slate-700">№' + ex.id + '</div>';
+                if (isDone) html += '<div class="absolute inset-0 bg-emerald-500/10 backdrop-blur-sm flex items-center justify-center pointer-events-none"><div class="bg-emerald-500/80 backdrop-blur-md text-white rounded-full p-3 shadow-lg"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg></div></div>';
+                html += '<div class="absolute top-3 right-3 liquid-glass rounded-full px-2.5 py-1 text-[10px] font-bold text-gray-300 border border-white/10">№' + ex.id + '</div>';
                 html += '</div>';
 
                 html += '<div class="p-5">';
-                html += '<h3 class="text-lg font-bold text-slate-800 leading-tight mb-2">' + ex.title + '</h3>';
-                html += '<div class="flex items-center gap-2 mb-3 flex-wrap"><span class="text-xs font-semibold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-lg flex items-center gap-1"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>' + ex.sets + ' подх. × ' + ex.reps + ' ' + repsUnit + '</span></div>';
-                html += '<p class="text-sm text-slate-600 leading-relaxed mb-4">' + ex.description + '</p>';
+                html += '<h3 class="text-lg font-bold text-white leading-tight mb-2">' + ex.title + '</h3>';
+                html += '<div class="flex items-center gap-2 mb-3"><span class="text-xs font-semibold text-indigo-400 liquid-glass px-2.5 py-1 rounded-lg flex items-center gap-1 border border-indigo-500/20"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>' + ex.sets + ' подх. × ' + ex.reps + ' ' + repsUnit + '</span></div>';
+                html += '<p class="text-sm text-gray-400 leading-relaxed mb-4">' + ex.description + '</p>';
 
-                html += '<div class="bg-slate-50 rounded-xl p-4 border border-slate-100">';
-                html += '<div class="flex items-center justify-between mb-3"><span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Трекер</span><span class="text-xs font-semibold ' + (isDone ? 'text-emerald-600' : 'text-slate-400') + '">' + (isDone ? '✓ Выполнено' : p.completedSets + ' / ' + ex.sets + ' подходов') + '</span></div>';
-                html += '<div class="w-full bg-slate-200 rounded-full h-1.5 mb-4 overflow-hidden"><div class="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full transition-all duration-500" style="width: ' + ((p.completedSets / ex.sets) * 100) + '%"></div></div>';
+                html += '<div class="liquid-glass rounded-xl p-4 border border-white/10">';
+                html += '<div class="flex items-center justify-between mb-3"><span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Трекер</span><span class="text-xs font-semibold ' + (isDone ? 'text-emerald-400' : 'text-gray-500') + '">' + (isDone ? '✓ Выполнено' : p.completedSets + ' / ' + ex.sets + ' подходов') + '</span></div>';
+                html += '<div class="progress-bar-glass w-full rounded-full h-1.5 mb-4 overflow-hidden"><div class="progress-fill h-full rounded-full transition-all duration-500" style="width: ' + ((p.completedSets / ex.sets) * 100) + '%"></div></div>';
 
                 html += '<div class="grid grid-cols-2 gap-2 mb-3">';
-                html += '<div class="bg-white rounded-lg p-3 border border-slate-200"><div class="text-[10px] font-bold text-slate-400 uppercase mb-2">Подходы</div><div class="flex items-center justify-between"><button onclick="changeSets(' + ex.id + ', -1)" class="tracker-btn w-8 h-8 rounded-lg bg-slate-100 text-slate-600 font-bold flex items-center justify-center hover:bg-slate-200 text-lg">−</button><span class="text-xl font-bold text-slate-800 w-8 text-center">' + p.completedSets + '</span><button onclick="changeSets(' + ex.id + ', 1)" class="tracker-btn w-8 h-8 rounded-lg bg-indigo-100 text-indigo-600 font-bold flex items-center justify-center hover:bg-indigo-200 text-lg">+</button></div></div>';
-                html += '<div class="bg-white rounded-lg p-3 border border-slate-200"><div class="text-[10px] font-bold text-slate-400 uppercase mb-2">Повторения</div><div class="flex items-center justify-between"><button onclick="changeReps(' + ex.id + ', -1)" class="tracker-btn w-8 h-8 rounded-lg bg-slate-100 text-slate-600 font-bold flex items-center justify-center hover:bg-slate-200 text-lg">−</button><input type="number" value="' + p.reps + '" oninput="setReps(' + ex.id + ', this.value)" class="reps-input w-12 text-center text-xl font-bold text-slate-800 bg-slate-50 border-2 border-slate-200 rounded-lg py-1" min="0" inputmode="numeric"><button onclick="changeReps(' + ex.id + ', 1)" class="tracker-btn w-8 h-8 rounded-lg bg-indigo-100 text-indigo-600 font-bold flex items-center justify-center hover:bg-indigo-200 text-lg">+</button></div></div>';
+                html += '<div class="liquid-glass rounded-lg p-3 border border-white/10"><div class="text-[10px] font-bold text-gray-500 uppercase mb-2">Подходы</div><div class="flex items-center justify-between"><button onclick="changeSets(' + ex.id + ', -1)" class="tracker-btn w-8 h-8 rounded-lg liquid-glass-button text-gray-400 font-bold flex items-center justify-center hover:text-white text-lg">−</button><span class="text-xl font-bold text-white w-8 text-center">' + p.completedSets + '</span><button onclick="changeSets(' + ex.id + ', 1)" class="tracker-btn w-8 h-8 rounded-lg bg-indigo-600/40 text-indigo-300 font-bold flex items-center justify-center hover:bg-indigo-600/60 text-lg">+</button></div></div>';
+                
+                // ИСПРАВЛЕНИЕ: onchange вместо oninput — перерисовка только после потери фокуса
+                html += '<div class="liquid-glass rounded-lg p-3 border border-white/10"><div class="text-[10px] font-bold text-gray-500 uppercase mb-2">Повторения</div><div class="flex items-center justify-between"><button onclick="changeReps(' + ex.id + ', -1)" class="tracker-btn w-8 h-8 rounded-lg liquid-glass-button text-gray-400 font-bold flex items-center justify-center hover:text-white text-lg">−</button><input type="number" id="reps-input-' + ex.id + '" value="' + p.reps + '" onchange="onRepsChange(' + ex.id + ', this.value)" onblur="onRepsBlur(' + ex.id + ', this.value)" class="reps-input w-12 text-center text-xl font-bold text-white liquid-glass border border-white/10 rounded-lg py-1" min="0" inputmode="numeric"><button onclick="changeReps(' + ex.id + ', 1)" class="tracker-btn w-8 h-8 rounded-lg bg-indigo-600/40 text-indigo-300 font-bold flex items-center justify-center hover:bg-indigo-600/60 text-lg">+</button></div></div>';
                 html += '</div>';
 
-                const btnClass = isDone ? 'bg-emerald-500 text-white hover:bg-emerald-600' : 'bg-white border-2 border-slate-200 text-slate-600 hover:border-indigo-400 hover:text-indigo-600';
-                const btnContent = isDone
-                    ? '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg> Упражнение выполнено'
-                    : '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> Отметить выполненным';
-                html += '<button onclick="toggleDone(' + ex.id + ')" class="w-full tracker-btn py-3 rounded-lg text-sm font-bold flex items-center justify-center gap-2 transition-colors ' + btnClass + '">' + btnContent + '</button>';
-
+                const btnClass = isDone ? 'bg-emerald-600/60 text-white hover:bg-emerald-600/80 border border-emerald-500/40' : 'liquid-glass-button text-gray-300 hover:text-white hover:border-indigo-500/40';
+                const btnContent = isDone ? '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg> Выполнено' : '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> Отметить выполненным';
+                html += '<button onclick="toggleDone(' + ex.id + ')" class="w-full tracker-btn py-3 rounded-lg text-sm font-bold flex items-center justify-center gap-2 transition-all border border-white/10 ' + btnClass + '">' + btnContent + '</button>';
                 html += '</div></div></article>';
             }
-
             list.innerHTML = html;
+        }
+
+        // ИСПРАВЛЕНИЕ: обработчики ввода без моргания
+        function onRepsChange(exId, value) {
+            const newReps = Math.max(0, parseInt(value) || 0);
+            updateProgress(exId, { reps: newReps });
+        }
+
+        function onRepsBlur(exId, value) {
+            // При потере фокуса синхронизируем значение
+            const input = document.getElementById('reps-input-' + exId);
+            if (input) {
+                const p = getProgress(exId);
+                input.value = p.reps;
+            }
         }
 
         function renderRecipes() {
             const list = document.getElementById('recipeList');
             let currentRecipes = recipes[currentNutritionTab];
-
             if (selectedIngredients.length > 0) {
-                currentRecipes = currentRecipes.map(function(recipe) {
-                    return {
-                        recipe: recipe,
-                        match: calculateMatch(recipe)
-                    };
-                }).filter(function(item) {
-                    return item.match > 0;
-                }).sort(function(a, b) {
-                    return b.match - a.match;
-                }).map(function(item) {
-                    return item.recipe;
-                });
+                currentRecipes = currentRecipes.map(r => ({ recipe: r, match: calculateMatch(r) })).filter(i => i.match > 0).sort((a, b) => b.match - a.match).map(i => i.recipe);
             }
-
-            let html = '<div class="flex items-center justify-between mb-2"><h2 class="text-xl font-bold text-slate-800"> Рецепты</h2><span class="text-xs font-medium text-slate-400">' + currentRecipes.length + ' рецептов</span></div>';
-
-            if (selectedIngredients.length > 0 && currentRecipes.length === 0) {
-                html += '<div class="bg-amber-50 border border-amber-200 rounded-2xl p-6 text-center"><div class="text-4xl mb-2">🔍</div><h3 class="font-bold text-amber-800 mb-1">Рецепты не найдены</h3><p class="text-sm text-amber-700">Попробуйте добавить другие продукты</p></div>';
-            }
-
+            let html = '<div class="flex items-center justify-between mb-2"><h2 class="text-xl font-bold text-white">🥗 Рецепты</h2><span class="text-xs font-medium text-gray-500">' + currentRecipes.length + '</span></div>';
+            if (selectedIngredients.length > 0 && currentRecipes.length === 0) html += '<div class="liquid-glass-card rounded-2xl p-6 text-center border border-amber-500/20"><div class="text-4xl mb-2">🔍</div><h3 class="font-bold text-amber-400 mb-1">Не найдено</h3><p class="text-sm text-gray-400">Попробуйте другие продукты</p></div>';
             for (let i = 0; i < currentRecipes.length; i++) {
                 const recipe = currentRecipes[i];
                 const match = selectedIngredients.length > 0 ? calculateMatch(recipe) : 0;
-                
-                html += '<article class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden card-enter recipe-card" style="animation-delay: ' + (i * 0.08) + 's">';
-                
-                html += '<div class="bg-gradient-to-r from-amber-400 to-orange-500 p-4 text-white relative">';
-                if (match > 0) {
-                    html += '<div class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-full px-2.5 py-1 text-xs font-bold text-orange-600 match-badge">' + match + '% совпадение</div>';
-                }
-                html += '<div class="flex items-start justify-between mb-2">';
-                html += '<h3 class="text-lg font-bold leading-tight flex-1 pr-2">' + recipe.title + '</h3>';
-                html += '<div class="bg-white/20 backdrop-blur-sm rounded-lg px-2 py-1 text-xs font-bold whitespace-nowrap">⏱️ ' + recipe.time + '</div>';
-                html += '</div>';
-                
-                html += '<div class="grid grid-cols-4 gap-2 mt-3">';
-                html += '<div class="bg-white/15 backdrop-blur-sm rounded-lg p-2 text-center"><div class="text-[10px] opacity-80 uppercase">Ккал</div><div class="text-sm font-bold">' + recipe.calories + '</div></div>';
-                html += '<div class="bg-white/15 backdrop-blur-sm rounded-lg p-2 text-center"><div class="text-[10px] opacity-80 uppercase">Белки</div><div class="text-sm font-bold">' + recipe.protein + 'г</div></div>';
-                html += '<div class="bg-white/15 backdrop-blur-sm rounded-lg p-2 text-center"><div class="text-[10px] opacity-80 uppercase">Углеводы</div><div class="text-sm font-bold">' + recipe.carbs + 'г</div></div>';
-                html += '<div class="bg-white/15 backdrop-blur-sm rounded-lg p-2 text-center"><div class="text-[10px] opacity-80 uppercase">Жиры</div><div class="text-sm font-bold">' + recipe.fat + 'г</div></div>';
-                html += '</div>';
-                html += '</div>';
-
-                html += '<div class="p-5">';
-                
-                html += '<div class="mb-4">';
-                html += '<h4 class="text-sm font-bold text-slate-700 mb-2 flex items-center gap-2"><svg class="w-4 h-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg> Ингредиенты</h4>';
-                html += '<ul class="space-y-1.5">';
+                html += '<article class="liquid-glass-card rounded-2xl overflow-hidden card-enter" style="animation-delay: ' + (i * 0.08) + 's">';
+                html += '<div class="bg-gradient-to-r from-amber-600/40 to-orange-600/40 p-4 relative border-b border-white/10">';
+                if (match > 0) html += '<div class="absolute top-3 right-3 liquid-glass rounded-full px-2.5 py-1 text-xs font-bold text-amber-400 match-badge border border-amber-500/30">' + match + '%</div>';
+                html += '<div class="flex items-start justify-between mb-2"><h3 class="text-lg font-bold text-white leading-tight flex-1 pr-2">' + recipe.title + '</h3><div class="liquid-glass rounded-lg px-2 py-1 text-xs font-bold text-gray-300 border border-white/10">️ ' + recipe.time + '</div></div>';
+                html += '<div class="grid grid-cols-4 gap-2 mt-3"><div class="liquid-glass rounded-lg p-2 text-center border border-white/10"><div class="text-[10px] text-gray-400 uppercase">Ккал</div><div class="text-sm font-bold text-white">' + recipe.calories + '</div></div><div class="liquid-glass rounded-lg p-2 text-center border border-white/10"><div class="text-[10px] text-gray-400 uppercase">Белки</div><div class="text-sm font-bold text-indigo-400">' + recipe.protein + 'г</div></div><div class="liquid-glass rounded-lg p-2 text-center border border-white/10"><div class="text-[10px] text-gray-400 uppercase">Углеводы</div><div class="text-sm font-bold text-emerald-400">' + recipe.carbs + 'г</div></div><div class="liquid-glass rounded-lg p-2 text-center border border-white/10"><div class="text-[10px] text-gray-400 uppercase">Жиры</div><div class="text-sm font-bold text-orange-400">' + recipe.fat + 'г</div></div></div>';
+                html += '</div><div class="p-5"><div class="mb-4"><h4 class="text-sm font-bold text-gray-300 mb-2 flex items-center gap-2">📝 Ингредиенты</h4><ul class="space-y-1.5">';
                 for (let j = 0; j < recipe.ingredients.length; j++) {
                     const ing = recipe.ingredients[j];
-                    const isAvailable = selectedIngredients.some(function(sel) {
-                        return ing.toLowerCase().indexOf(sel.toLowerCase()) !== -1 || sel.toLowerCase().indexOf(ing.toLowerCase()) !== -1;
-                    });
-                    html += '<li class="text-sm text-slate-600 flex items-start gap-2"><span class="w-1.5 h-1.5 rounded-full ' + (isAvailable && selectedIngredients.length > 0 ? 'bg-emerald-500' : 'bg-orange-400') + ' mt-2 flex-shrink-0"></span>' + ing + (isAvailable && selectedIngredients.length > 0 ? ' ✓' : '') + '</li>';
+                    const isAvailable = selectedIngredients.some(sel => ing.toLowerCase().indexOf(sel.toLowerCase()) !== -1 || sel.toLowerCase().indexOf(ing.toLowerCase()) !== -1);
+                    html += '<li class="text-sm text-gray-400 flex items-start gap-2"><span class="w-1.5 h-1.5 rounded-full ' + (isAvailable && selectedIngredients.length > 0 ? 'bg-emerald-400' : 'bg-orange-400') + ' mt-2 flex-shrink-0"></span>' + ing + (isAvailable && selectedIngredients.length > 0 ? ' <span class="text-emerald-400">✓</span>' : '') + '</li>';
                 }
-                html += '</ul>';
-                html += '</div>';
-
-                html += '<div class="mb-4">';
-                html += '<h4 class="text-sm font-bold text-slate-700 mb-2 flex items-center gap-2"><svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg> Приготовление</h4>';
-                html += '<ol class="space-y-2">';
-                for (let j = 0; j < recipe.steps.length; j++) {
-                    html += '<li class="text-sm text-slate-600 flex items-start gap-2"><span class="w-5 h-5 rounded-full bg-indigo-100 text-indigo-600 text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">' + (j + 1) + '</span>' + recipe.steps[j] + '</li>';
-                }
-                html += '</ol>';
-                html += '</div>';
-
-                if (recipe.tips) {
-                    html += '<div class="bg-amber-50 border border-amber-200 rounded-lg p-3">';
-                    html += '<div class="text-xs font-bold text-amber-700 mb-1 flex items-center gap-1"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> Совет</div>';
-                    html += '<p class="text-xs text-amber-800 leading-relaxed">' + recipe.tips + '</p>';
-                    html += '</div>';
-                }
-
+                html += '</ul></div><div class="mb-4"><h4 class="text-sm font-bold text-gray-300 mb-2 flex items-center gap-2">‍🍳 Приготовление</h4><ol class="space-y-2">';
+                for (let j = 0; j < recipe.steps.length; j++) html += '<li class="text-sm text-gray-400 flex items-start gap-2"><span class="w-5 h-5 rounded-full liquid-glass text-indigo-400 text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5 border border-indigo-500/30">' + (j + 1) + '</span>' + recipe.steps[j] + '</li>';
+                html += '</ol></div>';
+                if (recipe.tips) html += '<div class="liquid-glass border border-amber-500/20 rounded-lg p-3"><div class="text-xs font-bold text-amber-400 mb-1 flex items-center gap-1">💡 Совет</div><p class="text-xs text-gray-400 leading-relaxed">' + recipe.tips + '</p></div>';
                 html += '</div></article>';
             }
-
             list.innerHTML = html;
         }
 
-        function changeSets(exId, delta) {
-            const ex = exercises.find(function(e) { return e.id === exId; });
-            const p = getProgress(exId);
-            const newSets = Math.max(0, Math.min(ex.sets, p.completedSets + delta));
-            updateProgress(exId, { completedSets: newSets });
-        }
+        function changeSets(exId, delta) { haptic('light'); const ex = exercises.find(e => e.id === exId); const p = getProgress(exId); updateProgress(exId, { completedSets: Math.max(0, Math.min(ex.sets, p.completedSets + delta)) }); }
+        function changeReps(exId, delta) { haptic('light'); const p = getProgress(exId); updateProgress(exId, { reps: Math.max(0, p.reps + delta) }); }
+        function toggleDone(exId) { haptic('medium'); updateProgress(exId, { done: !getProgress(exId).done }); }
+        function switchCategory(catId) { haptic('light'); currentCategory = catId; renderTabs(); renderExercises(); window.scrollTo({ top: 300, behavior: 'smooth' }); }
 
-        function changeReps(exId, delta) {
-            const p = getProgress(exId);
-            const newReps = Math.max(0, p.reps + delta);
-            updateProgress(exId, { reps: newReps });
-        }
-
-        function setReps(exId, value) {
-            const p = getProgress(exId);
-            const newReps = Math.max(0, parseInt(value) || 0);
-            updateProgress(exId, { reps: newReps });
-        }
-
-        function toggleDone(exId) {
-            const p = getProgress(exId);
-            updateProgress(exId, { done: !p.done });
-        }
-
-        function switchCategory(catId) {
-            currentCategory = catId;
-            renderTabs();
-            renderExercises();
-            window.scrollTo({ top: 300, behavior: 'smooth' });
-        }
-
-        // ==================== INIT ====================
         renderTabs();
         renderExercises();
         updateHeaderProgress();
